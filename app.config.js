@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "FestFinder",
     "slug": "FestFinder",
@@ -12,14 +12,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mobile.festfinder",
+      "googleServicesFile": process.env.GOOGLE_SERVICES_INFOPLIST
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mobile.festfinder",
+      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON
     },
     "web": {
       "bundler": "metro",
@@ -27,10 +32,19 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "979255f8-347b-4804-96b2-f1fa93c19fe6"
+      }
     }
   }
 }
