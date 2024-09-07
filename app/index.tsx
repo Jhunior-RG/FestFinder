@@ -1,12 +1,11 @@
 import Login from "@/components/Login";
-import React from "react";
 import { StatusBar } from "expo-status-bar";
 import {  StyleSheet, Text, View } from "react-native";
 import { Link } from "@react-navigation/native";
 
 const index = () => {
     return (
-        <View className="flex-1 items-center justify-center ">
+        <View style={styles.container}>
             <Text >Index</Text>
             <Login />
             <Link to={"/Register"}>Registrar</Link>
@@ -14,6 +13,15 @@ const index = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})
 
 
 export default index;
