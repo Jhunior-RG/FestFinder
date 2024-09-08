@@ -1,20 +1,22 @@
+import { Text, View, StyleSheet } from "react-native";
+import { Link } from "@react-navigation/native";
 import Login from "@/components/Login";
 import { StatusBar } from "expo-status-bar";
-import {  StyleSheet, Text, View } from "react-native";
-import { Link } from "@react-navigation/native";
-import Styles from "../globalStyles/styles"
+import Styles from "../globalStyles/styles";
 
-const index = () => {
+const Index = () => {
     return (
         <View style={Styles.container}>
-            <Text style = {Styles.title} >Index</Text>
             <Login />
-            <Link to={"/Register"}>Registrar</Link>
-
+            <View style={Styles.linkContainer}>
+                <Text>No tienes una cuenta? </Text>
+                <Link to="/Register" style={Styles.linkText}>
+                    Registrarse
+                </Link>
+            </View>
         </View>
     );
 };
 
 
-
-export default index;
+export default Index;
