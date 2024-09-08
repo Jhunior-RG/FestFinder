@@ -15,7 +15,7 @@ const LoginGoogle = () => {
     const { signIn} = useSession();
 
    
-    const signin = async () => {
+    const signinGoogle = async () => {
         try {
             await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
@@ -31,7 +31,7 @@ const LoginGoogle = () => {
 
     return (
         <>
-            <Pressable style={Styles.button} onPress={signin}>
+            <Pressable style={Styles.button} onPress={signinGoogle}>
                 <Text style={Styles.buttonText}>Sign In With Google</Text>
             </Pressable>
    

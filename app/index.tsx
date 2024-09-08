@@ -7,8 +7,6 @@ import { router } from "expo-router";
 const Index = () => {
     const { session, signOut } = useSession();
 
-
-
     return (
         <View style={Styles.container}>
             <Text style={Styles.title}>Bienvenido a Fest Finder</Text>
@@ -17,19 +15,24 @@ const Index = () => {
                 <>
                     <Text>{JSON.stringify(session.data.user)}</Text>
 
-                    <Pressable style={Styles.button} onPress={()=> signOut()}>
+                    <Pressable style={Styles.button} onPress={() => signOut()}>
                         <Text style={Styles.buttonText}>Cerrar Session</Text>
                     </Pressable>
                 </>
             ) : (
-                <>  
-                    <Pressable style={Styles.button} onPress={()=> router.replace("/login")}>
+                <>
+                    <Pressable
+                        style={Styles.button}
+                        onPress={() => router.replace("/login")}
+                    >
                         <Text style={Styles.buttonText}>Iniciar sesion</Text>
                     </Pressable>
-                    <Pressable style={Styles.button} onPress={()=> router.replace("/register")}>
-                        <Text style={Styles.buttonText}>Resgistrarse</Text>
+                    <Pressable
+                        style={Styles.button}
+                        onPress={() => router.replace("/register")}
+                    >
+                        <Text style={Styles.buttonText}>Registrarse</Text>
                     </Pressable>
-
                 </>
             )}
         </View>
