@@ -1,4 +1,3 @@
-const { default: plugin } = require("tailwindcss");
 
 module.exports = function (api) {
   api.cache(true);
