@@ -10,7 +10,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [telephone, setTelephone] = useState("");
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if( [name,email,password,confirmPassword,telephone].includes("")){
             alert("Todos los campos son obligatorios");
             return null;
@@ -22,6 +22,25 @@ const Register = () => {
         // send to the server
         const data = { name, email, telephone, password, confirmPassword };
         console.log(data);
+
+        try {
+            const response = await fetch('http://localhost(remplazar con tu ip de momento):3000/registrar_usuario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+                const userData = await response.json();
+                console.log('Usuario registrado:', userData);
+                alert('Registro exitoso');
+            } else {
+                alert('Error al registrar');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error de conexión');
+        }
+
     };
 
     return (

@@ -13,14 +13,30 @@ const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if([email, password].includes("")){
             alert("Todos los campos son obligatorios")
             return;
         }
         // Send to the server
         const data = {email,password}
-        console.log(data)
+        try {
+            const response = await fetch('http://localhost(remplazar con tu ip de momento):3000/logear_usuario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+                const userData = await response.json();
+                console.log('Usuario logeado:', userData);
+                alert('Inicio de sesion exitoso');
+            } else {
+                alert('Error en el inicio de sesion');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error de conexión');
+        }
     }
 
     return (
