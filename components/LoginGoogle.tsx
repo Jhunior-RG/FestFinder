@@ -3,52 +3,40 @@ import {
     GoogleSigninButton,
 } from "@react-native-google-signin/google-signin";
 import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
+import { useSession } from "@/hooks/ctx";
+import { router } from "expo-router";
+import Styles from "../globalStyles/styles";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginGoogle = () => {
-    const [userInfo, setUserInfo] = useState(null);
-    const getStorageData = async () => {};
-    useEffect(() => {
-        GoogleSignin.configure({
-            webClientId:
-                "241797999690-5d7gqo37970apjob9en4so1stfgkqhjm.apps.googleusercontent.com",
-        });
+    const { signIn} = useSession();
 
-        getStorageData();
-    }, []);
+   
     const signin = async () => {
         try {
             await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
-            setUserInfo(user);
+         
+            if(user.data){
+                signIn(user);
+                router.replace("/");
+            }
         } catch (e) {
             console.log(JSON.stringify(e));
         }
     };
-    const logout = async () => {
-        setUserInfo(null);
-        GoogleSignin.revokeAccess();
-        GoogleSignin.signOut();
-    };
+
     return (
         <>
-            {userInfo && <Text>{JSON.stringify(userInfo?.data.user)}</Text>}
-
-            {userInfo ? (
-                <Button title="Logout" onPress={logout} />
-            ) : (
-                <GoogleSigninButton
-                    size={GoogleSigninButton.Size.Standard}
-                    color={GoogleSigninButton.Color.Dark}
-                    onPress={signin}
-                />
-            )}
+            <Pressable style={Styles.button} onPress={signin}>
+                <Text style={Styles.buttonText}>Sign In With Google</Text>
+            </Pressable>
+   
         </>
     );
 };
-
 
 export default LoginGoogle;

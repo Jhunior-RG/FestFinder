@@ -1,10 +1,11 @@
-import { createContext, useContext, type PropsWithChildren } from "react";
+import { createContext, useContext, useEffect, type PropsWithChildren } from "react";
 import { useStorageState } from "./useStorageState";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const AuthContext = createContext<{
-    signIn: () => void;
+    signIn: (arg1:JSON) => void;
     signOut: () => void;
-    session?: string | null;
+    session?: JSON | null;
     isLoading: boolean;
 }>({
     signIn: () => null,
@@ -26,17 +27,32 @@ export function useSession() {
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
+
     const [[isLoading, session], setSession] = useStorageState("session");
 
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+                "241797999690-5d7gqo37970apjob9en4so1stfgkqhjm.apps.googleusercontent.com",
+        });
+    }, []);
     return (
         <AuthContext.Provider
             value={{
-                signIn: () => {
+                signIn: (sessionData: JSON ) => {
                     // Perform sign-in logic here
-                    setSession("xxx");
+
+                    setSession(sessionData);
                 },
-                signOut: () => {
+                signOut: async () => {
+                    try {
+                        await GoogleSignin.revokeAccess()
+                        await GoogleSignin.signOut();
+                    }catch (err) {
+                        
+                    }
                     setSession(null);
+
                 },
                 session,
                 isLoading,
