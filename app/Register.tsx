@@ -45,7 +45,7 @@ const Register = () => {
       </TouchableOpacity>
       <View style={Styles.linkContainer}>
         <Text>Ya tienes una cuenta? </Text>
-        <Link to="/index" style={Styles.linkText}>
+        <Link to="/login" style={Styles.linkText}>
           Iniciar sesion
         </Link>
       </View>
