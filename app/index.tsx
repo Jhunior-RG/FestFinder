@@ -10,7 +10,7 @@ const index = () => {
             <Text style = {Styles.title} >Index</Text>
             <Login />
             <Link to={"/Register"}>Registrar</Link>
-            <StatusBar style="auto" />
+
         </View>
     );
 };
