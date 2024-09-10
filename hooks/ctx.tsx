@@ -3,9 +3,9 @@ import { useStorageState } from "./useStorageState";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const AuthContext = createContext<{
-    signIn: (arg1:JSON) => void;
+    signIn: (arg1:any) => void;
     signOut: () => void;
-    session?: JSON | null;
+    session?: any | null;
     isLoading: boolean;
 }>({
     signIn: () => null,

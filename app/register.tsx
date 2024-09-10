@@ -1,7 +1,8 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View, Image } from "react-native";
 import Styles from "../globalStyles/styles";
 import { Link } from "@react-navigation/native";
 import { useState } from "react";
+import LoginGoogle from "@/components/LoginGoogle";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -11,7 +12,7 @@ const Register = () => {
     const [telephone, setTelephone] = useState("");
 
     const handleSubmit = async () => {
-        if( [name,email,password,confirmPassword,telephone].includes("")){
+        if ([name, email, password, confirmPassword, telephone].includes("")) {
             alert("Todos los campos son obligatorios");
             return null;
         }
@@ -21,31 +22,35 @@ const Register = () => {
         }
         // send to the server
         const data = { name, email, telephone, password, confirmPassword };
-        console.log(data);
+
+        const API_URL = process.env.EXPO_PUBLIC_API_URL;
+        console.log("API_URL:", API_URL);
 
         try {
-            const response = await fetch('http://localhost(remplazar con tu ip de momento):3000/registrar_usuario', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch(API_URL + "/registrar_usuario", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
+
             if (response.ok) {
                 const userData = await response.json();
-                console.log('Usuario registrado:', userData);
-                alert('Registro exitoso');
+                console.log("Usuario registrado:", userData);
+                alert("Registro exitoso");
             } else {
-                alert('Error al registrar');
+                alert("Error al registrar");
             }
         } catch (error) {
             console.error(error);
-            alert('Error de conexión');
         }
-
     };
 
     return (
         <View style={Styles.container}>
-            <Text style={Styles.title}>Registrarse</Text>
+            <Image
+                source={require("../assets/images/festLogo.png")}
+                style={Styles.festLogo}
+            />
             <TextInput
                 placeholder="Nombre"
                 placeholderTextColor="purple"
@@ -82,6 +87,11 @@ const Register = () => {
             <TouchableOpacity style={Styles.button} onPress={handleSubmit}>
                 <Text style={Styles.buttonText}>Registrarse</Text>
             </TouchableOpacity>
+            <Text style={[Styles.textDecoration, Styles.espaciado]}>
+                Registrate usando
+            </Text>
+            <LoginGoogle />
+
             <View style={Styles.linkContainer}>
                 <Text>Ya tienes una cuenta? </Text>
                 <Link to="/login" style={Styles.linkText}>

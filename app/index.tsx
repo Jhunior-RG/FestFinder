@@ -1,14 +1,18 @@
-import { Button, Pressable, Text, View } from "react-native";
-import { Link } from "@react-navigation/native";
+import { Button, Pressable, Text, View, Image } from "react-native";
 import Styles from "../globalStyles/styles";
 import { useSession } from "@/hooks/ctx";
 import { router } from "expo-router";
+import { StyleSheet } from "react-native";
 
 const Index = () => {
     const { session, signOut } = useSession();
 
     return (
         <View style={Styles.container}>
+            <Image
+                source={require("../assets/images/festLogo.png")}
+                style={estiloLogo.festLogo}
+            />
             <Text style={Styles.title}>Bienvenido a Fest Finder</Text>
 
             {session?.data ? (
@@ -38,5 +42,13 @@ const Index = () => {
         </View>
     );
 };
+
+const estiloLogo = StyleSheet.create({
+    festLogo: {
+        width: 300,
+        height: 200,
+        resizeMode: "contain",
+    },
+});
 
 export default Index;

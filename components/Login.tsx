@@ -20,8 +20,13 @@ const Login = () => {
         }
         // Send to the server
         const data = {email,password}
+        const API_URL = process.env.EXPO_PUBLIC_API_URL
+
         try {
-            const response = await fetch('http://localhost(remplazar con tu ip de momento):3000/logear_usuario', {
+
+            console.log(await fetch(API_URL+'/get'))
+
+            const response = await fetch(`${API_URL}/logear_usuario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -41,7 +46,6 @@ const Login = () => {
 
     return (
         <>
-            <Text style={Styles.title}>Iniciar Sesion</Text>
             <TextInput
                 placeholder="Email"
                 keyboardType="email-address"
