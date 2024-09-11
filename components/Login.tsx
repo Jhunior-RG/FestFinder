@@ -24,8 +24,6 @@ const Login = () => {
 
         try {
 
-            console.log(await fetch(API_URL + '/get'))
-
             const response = await fetch(`${API_URL}/logear_usuario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
