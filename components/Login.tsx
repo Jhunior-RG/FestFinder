@@ -1,4 +1,4 @@
-import { Button, Text, TextInput, TouchableOpacity } from "react-native";
+import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import LoginGoogle from "./LoginGoogle";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
@@ -9,22 +9,22 @@ const getLoginData = async () => {
 };
 
 const Login = () => {
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSubmit = async () => {
-        if([email, password].includes("")){
+        if ([email, password].includes("")) {
             alert("Todos los campos son obligatorios")
             return;
         }
         // Send to the server
-        const data = {email,password}
+        const data = { email, password }
         const API_URL = process.env.EXPO_PUBLIC_API_URL
 
         try {
 
-            console.log(await fetch(API_URL+'/get'))
+            console.log(await fetch(API_URL + '/get'))
 
             const response = await fetch(`${API_URL}/logear_usuario`, {
                 method: 'POST',
@@ -49,14 +49,14 @@ const Login = () => {
             <TextInput
                 placeholder="Email"
                 keyboardType="email-address"
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={setEmail}
             />
             <TextInput
                 placeholder="Contraseña"
                 secureTextEntry={true}
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={setPassword}
             />
@@ -66,12 +66,34 @@ const Login = () => {
             >
                 <Text style={Styles.buttonText}>Iniciar Sesion</Text>
             </TouchableOpacity>
-            <Text style={[Styles.textDecoration, Styles.espaciado]}>
-                Inicia sesion usando
-            </Text>
+            <View style={styles.lineContainer}>
+                <View style={styles.line} />
+                <Text style={styles.lineText}>Inicia sesión usando</Text>
+                <View style={styles.line} />
+            </View>
             <LoginGoogle />
         </>
     );
 };
+const styles = {
+    lineContainer: {
+        flexDirection: "row" as const,
+        alignItems: "center" as const,
+        marginVertical: 10,
+        paddingHorizontal: 20,
+        marginTop: 20,
+    },
+    line: {
+        flex: 1,
+        height: 1,
+        backgroundColor: "#402158",
+    },
+    lineText: {
+        marginHorizontal: 10,
+        color: "#402158",
+        fontWeight: "500" as const,
+    },
+};
+
 
 export default Login;

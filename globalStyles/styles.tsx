@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const estilos = StyleSheet.create({
     title: {
-        color: "purple",
+        color: "#402158",
         fontWeight: "500",
         fontSize: 26,
         marginBottom: 15,
@@ -13,7 +13,7 @@ const estilos = StyleSheet.create({
         alignItems: "center",
     },
     input: {
-        borderColor: "purple",
+        borderColor: "#402158",
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
@@ -21,11 +21,11 @@ const estilos = StyleSheet.create({
         width: "80%",
     },
     textDecoration: {
-        color: "purple",
+        color: "#402158",
         textAlign: "left",
     },
     button: {
-        backgroundColor: "purple",
+        backgroundColor: "#402158",
         padding: 10,
         borderRadius: 10,
         alignItems: "center",
@@ -68,12 +68,16 @@ const estilos = StyleSheet.create({
     tinylogo: {
         width: 25,
         height: 25,
-        marginRight: 60,
+        marginRight: 50,
     },
     festLogo: {
         width: 200,
         height: 100,
         marginBottom: 10,
+    },
+    textDecoration2: {
+        color: "#7D5683",
+        textAlign: "left",
     },
 });
 

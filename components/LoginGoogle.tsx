@@ -35,7 +35,7 @@ const LoginGoogle = () => {
                     source={require("../assets/images/googleIcon.png")}
                     style={Styles.tinylogo}
                 />
-                <Text style={Styles.buttonTextGoogle}>Iniciar Con Google</Text>
+                <Text style={Styles.buttonTextGoogle}>Iniciar con Google</Text>
             </Pressable>
         </>
     );

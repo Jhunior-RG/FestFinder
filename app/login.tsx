@@ -14,7 +14,7 @@ const login = () => {
             <Login />
             <View style={Styles.linkContainer}>
                 <Text>No tienes una cuenta? </Text>
-                <Link to="/register" style={Styles.linkText}>
+                <Link to="/register" style={Styles.textDecoration2}>
                     Registrarse
                 </Link>
             </View>

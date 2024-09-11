@@ -53,53 +53,75 @@ const Register = () => {
             />
             <TextInput
                 placeholder="Nombre"
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={(e: string) => setName(e)}
             />
             <TextInput
                 placeholder="Email"
                 keyboardType="email-address"
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={(e: string) => setEmail(e)}
             />
             <TextInput
                 placeholder="Telefono"
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={(e: string) => setTelephone(e)}
             />
             <TextInput
                 placeholder="Contraseña"
                 secureTextEntry={true}
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={(e: string) => setPassword(e)}
             />
             <TextInput
                 placeholder="Confirmación de contraseña"
                 secureTextEntry={true}
-                placeholderTextColor="purple"
+                placeholderTextColor="#402158"
                 style={Styles.input}
                 onChangeText={(e: string) => setConfirmPassword(e)}
             />
             <TouchableOpacity style={Styles.button} onPress={handleSubmit}>
                 <Text style={Styles.buttonText}>Registrarse</Text>
             </TouchableOpacity>
-            <Text style={[Styles.textDecoration, Styles.espaciado]}>
-                Registrate usando
-            </Text>
+            <View style={styles.lineContainer}>
+                <View style={styles.line} />
+                <Text style={styles.lineText}>Registrarse usando</Text>
+                <View style={styles.line} />
+            </View>
             <LoginGoogle />
 
             <View style={Styles.linkContainer}>
                 <Text>Ya tienes una cuenta? </Text>
-                <Link to="/login" style={Styles.linkText}>
+                <Link to="/login" style={Styles.textDecoration2}>
                     Iniciar sesion
                 </Link>
             </View>
         </View>
     );
+};
+
+const styles = {
+    lineContainer: {
+        flexDirection: "row" as const,
+        alignItems: "center" as const,
+        marginVertical: 10,
+        paddingHorizontal: 20,
+        marginTop: 20,
+    },
+    line: {
+        flex: 1,
+        height: 1,
+        backgroundColor: "#402158",
+    },
+    lineText: {
+        marginHorizontal: 10,
+        color: "#402158",
+        fontWeight: "500" as const,
+    },
 };
 
 export default Register;
