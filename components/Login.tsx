@@ -29,6 +29,7 @@ const Login = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             });
+            
             if (response.ok) {
                 const userData = await response.json();
                 console.log('Usuario logeado:', userData);

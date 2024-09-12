@@ -19,12 +19,34 @@ const LoginGoogle = () => {
             await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
 
+            const data = {
+                name: user.data?.user.name,
+                email: user.data?.user.email,
+                password: user.data?.user.id,
+            };
+
+            const API_URL = process.env.EXPO_PUBLIC_API_URL;
+            
+            const response = await fetch(`${API_URL}/logear_usuario`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if(!response.ok){     
+                await fetch(API_URL + "/registrar_usuario", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+            }
+
             if (user.data) {
                 signIn(user);
                 router.replace("/");
             }
         } catch (e) {
-            console.log(JSON.stringify(e));
+            console.error(e);
         }
     };
 

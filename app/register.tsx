@@ -24,7 +24,6 @@ const Register = () => {
         const data = { name, email, telephone, password, confirmPassword };
 
         const API_URL = process.env.EXPO_PUBLIC_API_URL;
-        console.log("API_URL:", API_URL);
 
         try {
             const response = await fetch(API_URL + "/registrar_usuario", {
