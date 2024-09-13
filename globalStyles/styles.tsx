@@ -89,9 +89,11 @@ const Styles = StyleSheet.create({
         gap: 10,
     },
     imageProfile: {
-        width: 100,
-        height: 100,
+        width: 80,
+        height: 80,
         borderRadius: 50,
+        marginLeft: 10,
+        marginTop: 10,
     },
     itemProfileContainer: {
         flexDirection: "row",
@@ -102,17 +104,22 @@ const Styles = StyleSheet.create({
 
     //header
     headerView: {
-        backgroundColor: colorPrimary,
+        backgroundColor: "#402158",  
         alignItems: "center",
         flexDirection: "row",
-        paddingTop: 30,
+        paddingVertical: 20,
         paddingHorizontal: 20,
-        paddingBottom: 10,
+        borderRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 4,  
     },
     headerTitle: {
-        fontSize: 15,
+        fontSize: 18,
         color: "white",
-        marginLeft: 20,
+        marginLeft: 30,
     },
 });
 

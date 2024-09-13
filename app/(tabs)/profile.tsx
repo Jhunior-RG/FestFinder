@@ -4,6 +4,7 @@ import Styles from "../../globalStyles/styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ItemProfile from "@/components/ItemProfile";
 import Header from "@/components/Header";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const profile = () => {
     const { session, signOut } = useSession();
@@ -20,40 +21,80 @@ const profile = () => {
                         justifyContent: "center",
                     }}
                 >
-                    <Text>{name}</Text>
+                    <Text style={styles.textoTitulo}>{name}</Text>
                     <Text>{email}</Text>
                 </View>
             </View>
-            <Text>Perfil</Text>
-            <ItemProfile
-                onPress={() => {}}
-                color="#7D5683"
-                text="Informacion personal"
-                icon="user-o"
-            />
-            <ItemProfile
-                onPress={() => {}}
-                color="#7D5683"
-                text="Lugares favoritos"
-                icon="heart-o"
-            />
-            <ItemProfile
-                onPress={() => {}}
-                color="#7D5683"
-                text="Historial"
-                icon="clock-o"
-            />
-            <Text>Configuracion</Text>
-            <ItemProfile onPress={() => {}} text="Notificaciones" />
-            <ItemProfile onPress={() => {}} text="Registrar mi local" />
-            <ItemProfile
-                onPress={() => {
-                    signOut();
-                }}
-                text="Cerrar sesion"
-            />
+            <Text style={styles.textoSubtitulo}>Perfil</Text>
+            <View style={styles.parametros}>
+                <ItemProfile
+                    onPress={() => { }}
+                    color="#7D5683"
+                    text="Informacion personal"
+                    icon="user-o"
+                    textColor="#787878"
+                />
+                <ItemProfile
+                    onPress={() => { }}
+                    color="#7D5683"
+                    text="Lugares favoritos"
+                    icon="heart-o"
+                    textColor="#787878"
+                />
+                <ItemProfile
+                    onPress={() => { }}
+                    color="#7D5683"
+                    text="Historial"
+                    icon="clock-o"
+                    textColor="#787878"
+                />
+            </View>
+
+            <Text style={styles.textoSubtitulo}>Configuracion</Text>
+            <View style={styles.parametros}>
+                <ItemProfile
+                    onPress={() => { }}
+                    color="#7D5683"
+                    text="Notificaiones"
+                    icon="bell-o"
+                    textColor="#787878"
+                />
+                <ItemProfile
+                    onPress={() => { }}
+                    color="#7D5683"
+                    text="Registrar mi local"
+                    icon="cart-plus"
+                    textColor="#787878"
+                />
+                <ItemProfile
+                    onPress={() => {
+                        signOut();
+                    }}
+                    color="#7D5683"
+                    text="Cerrar sesión"
+                    icon="arrow-circle-right"
+                    textColor="#787878"
+                />
+            </View>
         </View>
     );
+};
+
+const styles = {
+    textoTitulo: {
+        fontWeight: "bold" as "bold",
+        fontSize: 23,
+    },
+    textoSubtitulo: {
+        fontWeight: "bold" as "semibold",
+        fontSize: 16,
+        marginTop: 40,
+        marginLeft: 10,
+    },
+    parametros: {
+        marginLeft: 20,
+        marginTop: 10,
+    }
 };
 
 export default profile;
