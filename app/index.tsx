@@ -1,11 +1,18 @@
-import { Button, Pressable, Text, View, Image } from "react-native";
+import { Pressable, Text, View, Image } from "react-native";
 import Styles from "../globalStyles/styles";
 import { useSession } from "@/hooks/ctx";
 import { router } from "expo-router";
 import { StyleSheet } from "react-native";
+import { useEffect } from "react";
 
 const Index = () => {
     const { session, signOut } = useSession();
+
+    useEffect(() => {
+        if (session) {
+            router.replace("/inicio");
+        }
+    }, [session]);
 
     return (
         <View style={Styles.container}>
@@ -27,13 +34,13 @@ const Index = () => {
                 <>
                     <Pressable
                         style={Styles.button}
-                        onPress={() => router.replace("/login")}
+                        onPress={() => router.navigate("/login")}
                     >
                         <Text style={Styles.buttonText}>Iniciar sesion</Text>
                     </Pressable>
                     <Pressable
                         style={Styles.button}
-                        onPress={() => router.replace("/register")}
+                        onPress={() => router.navigate("/register")}
                     >
                         <Text style={Styles.buttonText}>Registrarse</Text>
                     </Pressable>

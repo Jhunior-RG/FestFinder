@@ -1,22 +1,21 @@
-import { SessionProvider } from "@/hooks/ctx"
-import { Slot } from "expo-router"
-import { StatusBar } from "expo-status-bar"
-import { StyleSheet, Text, View } from "react-native"
-
+import { SessionProvider } from "@/hooks/ctx";
+import { Stack } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 
 const HomeLayout = () => {
-  return (
-    <SessionProvider>
-        <Slot/>
-        <StatusBar style="auto" />
-    </SessionProvider>
-  )
-}
-const styles = StyleSheet.create({
-    themeBlack: {
-        backgroundColor: '#333',
-        color: '#fff'
-    }
-})
+    return (
+        <SessionProvider>
+            <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+                <Stack.Screen
+                    name="register"
+                    options={{ headerShown: false }}
+                />
+            </Stack>
+        </SessionProvider>
+    );
+};
 
-export default HomeLayout
+export default HomeLayout;

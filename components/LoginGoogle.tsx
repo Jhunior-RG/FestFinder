@@ -19,6 +19,10 @@ const LoginGoogle = () => {
             await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
 
+            // Loguearse con los datos de google para obtener los datos del backend
+            // y si no se puede registrar esos datos
+
+            /*
             const data = {
                 name: user.data?.user.name,
                 email: user.data?.user.email,
@@ -26,7 +30,6 @@ const LoginGoogle = () => {
             };
 
             const API_URL = process.env.EXPO_PUBLIC_API_URL;
-            
             const response = await fetch(`${API_URL}/logear_usuario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -40,6 +43,7 @@ const LoginGoogle = () => {
                     body: JSON.stringify(data),
                 });
             }
+            */
 
             if (user.data) {
                 signIn(user);

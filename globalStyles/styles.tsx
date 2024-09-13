@@ -1,6 +1,9 @@
+import ItemProfile from "@/components/ItemProfile";
 import { StyleSheet } from "react-native";
 
-const estilos = StyleSheet.create({
+const colorPrimary = "#402158";
+
+const Styles = StyleSheet.create({
     title: {
         color: "#402158",
         fontWeight: "500",
@@ -79,6 +82,38 @@ const estilos = StyleSheet.create({
         color: "#7D5683",
         textAlign: "left",
     },
+    tabBarStyle: {},
+    //profile
+    containerProfile: {
+        flexDirection: "row",
+        gap: 10,
+    },
+    imageProfile: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+    },
+    itemProfileContainer: {
+        flexDirection: "row",
+        padding: 10,
+        width: "80%",
+        justifyContent: "space-between",
+    },
+
+    //header
+    headerView: {
+        backgroundColor: colorPrimary,
+        alignItems: "center",
+        flexDirection: "row",
+        paddingTop: 30,
+        paddingHorizontal: 20,
+        paddingBottom: 10,
+    },
+    headerTitle: {
+        fontSize: 15,
+        color: "white",
+        marginLeft: 20,
+    },
 });
 
-export default estilos;
+export default Styles;

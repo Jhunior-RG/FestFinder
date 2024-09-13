@@ -1,9 +1,15 @@
-import { createContext, useContext, useEffect, type PropsWithChildren } from "react";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    type PropsWithChildren,
+} from "react";
 import { useStorageState } from "./useStorageState";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { router } from "expo-router";
 
 const AuthContext = createContext<{
-    signIn: (arg1:any) => void;
+    signIn: (arg1: any) => void;
     signOut: () => void;
     session?: any | null;
     isLoading: boolean;
@@ -27,7 +33,6 @@ export function useSession() {
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
-
     const [[isLoading, session], setSession] = useStorageState("session");
 
     useEffect(() => {
@@ -39,20 +44,20 @@ export function SessionProvider({ children }: PropsWithChildren) {
     return (
         <AuthContext.Provider
             value={{
-                signIn: (sessionData: JSON ) => {
+                signIn: (sessionData: JSON) => {
                     // Perform sign-in logic here
-
+                    router.replace("/inicio");
                     setSession(sessionData);
                 },
                 signOut: async () => {
-                    try {
-                        await GoogleSignin.revokeAccess()
-                        await GoogleSignin.signOut();
-                    }catch (err) {
-                        
-                    }
+                    router.replace("/");
                     setSession(null);
-
+                    try {
+                        await GoogleSignin.revokeAccess();
+                        await GoogleSignin.signOut();
+                    } catch (err) {
+                        console.error(err);
+                    }
                 },
                 session,
                 isLoading,
