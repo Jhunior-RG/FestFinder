@@ -1,4 +1,3 @@
-import ItemProfile from "@/components/ItemProfile";
 import { StyleSheet } from "react-native";
 
 const colorPrimary = "#402158";
@@ -120,6 +119,54 @@ const Styles = StyleSheet.create({
         fontSize: 18,
         color: "white",
         marginLeft: 30,
+    },
+
+    //preview
+    banner: {
+        width: "80%",
+        height: 250,
+        backgroundColor: "gray",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 10,
+    },
+    imageBanner: { width: "100%", height: 250 },
+    imageRoundedContainer: {
+        top: "-10%",
+        width: 100,
+        height: 100,
+        backgroundColor: "gray",
+        borderWidth: 2,
+        borderRadius: 50,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    imageRounded: { width: 100, height: 100, borderRadius: 50 },
+    lineSelected: {
+        width: "50%",
+        paddingVertical: 5,
+        backgroundColor: "purple",
+    },
+    line: {
+        width: "50%",
+        paddingVertical: 5,
+        backgroundColor: "gray",
+    },
+    lineContainer: {
+        flexDirection: "row",
+        width: "80%",
+        margin: 10,
+    },
+    tag: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    addTag: {
+        backgroundColor: "purple",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 10,
     },
 });
 
