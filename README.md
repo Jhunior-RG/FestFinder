@@ -1,3 +1,7 @@
+# Aplicacion necesaria para Android fecha 16/09/2024
+[link de la descarga](https://expo.dev/accounts/jhuniorrg/projects/FestFinder/builds/1c08644f-7aeb-49ca-a671-a5ffd7e96d2b)
+
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).

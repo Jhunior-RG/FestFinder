@@ -12,7 +12,7 @@ export default {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mobile.festfinder",
@@ -34,7 +34,14 @@ export default {
     "plugins": [
       "expo-router",
       "@react-native-google-signin/google-signin",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        },
+      ],
     ],
     "experiments": {
       "typedRoutes": true

@@ -4,6 +4,7 @@ import Styles from "../../globalStyles/styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ItemProfile from "@/components/ItemProfile";
 import Header from "@/components/Header";
+import { router } from "expo-router";
 
 const profile = () => {
     const { session, signOut } = useSession();
@@ -45,7 +46,12 @@ const profile = () => {
             />
             <Text>Configuracion</Text>
             <ItemProfile onPress={() => {}} text="Notificaciones" />
-            <ItemProfile onPress={() => {}} text="Registrar mi local" />
+            <ItemProfile
+                onPress={() => {
+                    router.navigate("/business/register_business");
+                }}
+                text="Registrar mi local"
+            />
             <ItemProfile
                 onPress={() => {
                     signOut();

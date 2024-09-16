@@ -11,13 +11,13 @@ export default function TabLayout() {
             screenOptions={{
                 tabBarActiveTintColor: "#402158",
                 tabBarStyle: Styles.tabBarStyle,
+                headerShown: false,
             }}
         >
             <Tabs.Screen
                 name="inicio"
                 options={{
                     title: "Home",
-                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="home" color={color} />
                     ),
@@ -27,7 +27,6 @@ export default function TabLayout() {
                 name="buscar"
                 options={{
                     title: "buscar",
-                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="search" color={color} />
                     ),
