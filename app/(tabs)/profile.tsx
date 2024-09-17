@@ -4,7 +4,7 @@ import Styles from "../../globalStyles/styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ItemProfile from "@/components/ItemProfile";
 import Header from "@/components/Header";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { router } from "expo-router";
 
 const profile = () => {
     const { session, signOut } = useSession();
@@ -22,7 +22,7 @@ const profile = () => {
                     }}
                 >
                     <Text style={styles.textoTitulo}>{name}</Text>
-                    <Text>{email}</Text>
+                    <Text style={styles.textoMail} >{email}</Text>
                 </View>
             </View>
             <Text style={styles.textoSubtitulo}>Perfil</Text>
@@ -60,7 +60,9 @@ const profile = () => {
                     textColor="#787878"
                 />
                 <ItemProfile
-                    onPress={() => { }}
+                    onPress={() => {
+                        router.navigate("/business/register_business");
+                    }}
                     color="#7D5683"
                     text="Registrar mi local"
                     icon="cart-plus"
@@ -94,7 +96,10 @@ const styles = {
     parametros: {
         marginLeft: 20,
         marginTop: 10,
-    }
+    },
+    textoMail: {
+        marginTop: 2,
+    },
 };
 
 export default profile;
