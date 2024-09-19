@@ -1,7 +1,14 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Styles from "@/globalStyles/styles";
@@ -12,11 +19,11 @@ const preview = () => {
     const [tags, setTags] = useState<string[] | []>([]);
     const [tag, setTag] = useState<string>("");
 
-    const pickImage = async (setImage: any) => {
+    const pickImage = async (setImage: any, aspect: [number, number]) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: aspect,
             quality: 1,
         });
 
@@ -42,22 +49,30 @@ const preview = () => {
         // Enviar todos los datos al backend
     };
     return (
-        <View style={[Styles.container, { marginTop: 10, }]}>
+        <View style={[{flex:1, width: "100%",alignItems: "center" ,justifyContent: "space-between"}]}>
+            <View style={{ width: "100%",alignItems: "center"}}>
             <Pressable
                 onPress={router.back}
                 style={{
-                    position: 'absolute',
-                    top: 20,
-                    left: 10,
+                    left: "-40%",
                     marginTop: 30,
                     zIndex: 1,
                 }}
-
-            ><FontAwesome name="arrow-left" size={25} /></Pressable>
-            <Text style={[Styles.subtitle, { marginLeft: 30, alignSelf: 'flex-start', marginTop: -30 }]}>Vista previa</Text>
+            >
+                <FontAwesome name="arrow-left" size={25} />
+            </Pressable>
+                
+            <Text
+                style={[
+                    Styles.subtitle,
+                    { marginLeft: 30, alignSelf: "flex-start",marginTop: 10 },
+                ]}
+            >
+                Vista previa
+            </Text>
             <Pressable
                 onPress={() => {
-                    pickImage(setImageBanner);
+                    pickImage(setImageBanner, [4, 3]);
                 }}
                 style={Styles.banner}
             >
@@ -67,7 +82,9 @@ const preview = () => {
                         style={Styles.imageBanner}
                     />
                 ) : (
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                    >
                         <FontAwesome name="plus" style={{ marginRight: 10 }} />
                         <Text>Agregar banner</Text>
                     </View>
@@ -75,9 +92,14 @@ const preview = () => {
             </Pressable>
 
             <Pressable
-                style={[Styles.imageRoundedContainer, { alignSelf: 'flex-start', marginLeft: 30, marginTop:10 }]}
+                style={[
+                    Styles.imageRoundedContainer,
+                    {
+                        left: "-30%"
+                    },
+                ]}
                 onPress={() => {
-                    pickImage(setimage2);
+                    pickImage(setimage2, [1, 1]);
                 }}
             >
                 {image2 ? (
@@ -89,7 +111,6 @@ const preview = () => {
                     <FontAwesome name="camera" size={30} />
                 )}
             </Pressable>
-
 
             {tags &&
                 tags.map((tag) => (
@@ -113,22 +134,14 @@ const preview = () => {
                     </View>
                 ))}
 
-            <View
-                style={[
-                    Styles.input,
-                    Styles.tag
-                ]}
-            >
+            <View style={[Styles.input, Styles.tag]}>
                 <TextInput
                     value={tag}
                     onChangeText={setTag}
                     placeholder="Etiquetas"
                     style={[{ color: "#402158", width: "auto" }]}
                 />
-                <Pressable
-                    onPress={addTag}
-                    style={Styles.addTag}
-                >
+                <Pressable onPress={addTag} style={Styles.addTag}>
                     <FontAwesome color={"white"} name="plus" />
                 </Pressable>
             </View>
@@ -137,8 +150,20 @@ const preview = () => {
                 <Text style={Styles.buttonText}>Registrar negocio</Text>
             </Pressable>
 
-            <View style={[{ justifyContent: 'flex-end' }]}>
-                <View style={[Styles.lineContainer, { marginBottom: 30, flexDirection: 'row', justifyContent: 'center', gap: 10 }]}>
+
+            </View>
+            <View>
+                <View
+                    style={[
+                        Styles.lineContainer,
+                        {
+                            marginBottom: 30,
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            gap: 10,
+                        },
+                    ]}
+                >
                     <View style={[Styles.line, { borderRadius: 10 }]} />
                     <View style={[Styles.lineSelected, { borderRadius: 10 }]} />
                 </View>
