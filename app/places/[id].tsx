@@ -1,6 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, router, useLocalSearchParams, type Href } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import Styles from "@/globalStyles/styles";
+
 import {
     ImageBackground,
     Text,
@@ -49,8 +53,30 @@ const Place = () => {
     const [proximosEventos, setProximosEventos] = useState<Evento[]>([]);
     const [fotos, setFotos] = useState<any[]>([]);
     const [lugaresParecidos, setLugaresParecidos] = useState<Lugar[]>([]);
-
     const params = useLocalSearchParams();
+    const [fontsLoaded] = useFonts({
+        'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
+        'Poppins-Bold': require('../../assets/fonts/Poppins-Bold.ttf'),
+        'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
+    });
+    useEffect(() => {
+        const prepare = async () => {
+            try {
+                if (!fontsLoaded) {
+                    await SplashScreen.preventAutoHideAsync();
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        prepare();
+    }, [fontsLoaded]);
+
+    useEffect(() => {
+        if (fontsLoaded) {
+            SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
 
     useEffect(() => {
         // id del establecimiento
@@ -63,7 +89,7 @@ const Place = () => {
             descripcion: "",
             banner: require("../../assets/images/alice-park.png"),
             logo: require("../../assets/images/alice-park.png"),
-            tipo: "tipo de local",
+            tipo: "Discoteca",
             nro_ref: "70711360",
         };
 
@@ -146,72 +172,124 @@ const Place = () => {
                 <>
                     <ImageBackground
                         source={establecimiento.banner}
-                        style={styles.imageBackground}
+                        style={Styles.imageBanner}
                     >
+                        <Pressable onPress={router.back}>
+                            <FontAwesome
+                                name="arrow-left"
+                                color={"white"}
+                                size={30}
+                                style={{ position: "absolute", top: 40, left: 10 }}
+                            />
+                        </Pressable>
                         <FontAwesome
-                            name="arrow-left"
+                            name="heart"
                             color={"white"}
                             size={30}
+                            style={{ position: "absolute", bottom: 10, right: 10 }}
                         />
-                        <FontAwesome name="heart" color={"white"} size={30} />
                     </ImageBackground>
-                    <Image source={establecimiento.logo} style={styles.logo} />
+
+                    <Image source={establecimiento.logo} style={[styles.redondoImg, styles.contenedorIMG,
+                    {
+                        left: "2%"
+                    },]} />
                     <View
                         style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
                         }}
                     >
-                        <View>
-                            <Text>{establecimiento.nombre}</Text>
-                            <Text>{establecimiento.tipo}</Text>
+                        <View style={styles.localInfo}>
+                            <Text style={[{ fontFamily: 'Poppins-Bold' }, { left: '10%' }, styles.nombreLocal]}>{establecimiento.nombre}</Text>
+                            <Text style={[{ fontFamily: 'Poppins-Regular' }, { left: '10%' }, styles.tipoLocal]}>{establecimiento.tipo}</Text>
                         </View>
-                        <Link href={"https://wa.link/9nq0oq"}>
+                        <View style={{ top: "-20%", right: "40%" }}>
+                            <Link href={"https://wa.link/9nq0oq"}>
+                                <FontAwesome
+                                    name="whatsapp"
+                                    color={"green"}
+                                    size={30}
+                                />
+                            </Link>
+                        </View>
+                    </View>
+                    <View style={styles.localData}>
+                        <Text style={[{ fontFamily: 'Poppins-Regular' }, { marginLeft: 10, fontSize: 14 }]}>
                             <FontAwesome
-                                name="whatsapp"
-                                color={"green"}
-                                size={35}
-                            />
-                        </Link>
-                    </View>
-                    <Text>
-                        <FontAwesome name="location-arrow" />
-                        {establecimiento.direccion}
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-around",
-                        }}
-                    >
-                        {etiquetas.map((etiqueta) => (
-                            <Text key={etiqueta}>{etiqueta}</Text>
-                        ))}
-                    </View>
-                    <Text>Calificacion</Text>
-                    <View
-                        style={{
-                            borderColor: "purple",
-                            borderWidth: 2,
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <View>
-                            <Text>
-                                {" "}
-                                <FontAwesome name="star" color={"orange"} />
-                                {valoracion} / 10
-                            </Text>
-                            <TextInput placeholder="Añade tus calificaciones y reseñas" />
+                                name="location-arrow"
+                                style={{ marginRight: 10 }} />
+                            {establecimiento.direccion}
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-around",
+
+                            }}
+                        >
+                            {etiquetas.map((etiqueta) => (
+                                <Text
+                                    key={etiqueta}
+                                    style={[{ fontFamily: 'Poppins-Regular', marginTop: "3%" }, { backgroundColor: "rgba(235, 182, 255, 0.5)", borderRadius: 10, paddingHorizontal: 8 }]}>
+                                    {etiqueta}
+                                </Text>
+
+                            ))}
                         </View>
-                        <Pressable onPress={handleCalificar}>
-                            <Text>Calificar</Text>
-                        </Pressable>
+                        <Text style={[{ fontFamily: 'Poppins-Regular' }, { color: "#402158", marginLeft: "3%", marginTop: "3%" }]}>Calificación</Text>
+                        <View
+                            style={{
+                                borderColor: "#7D5683",
+                                borderWidth: 2,
+                                borderRadius: 10,
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                width: "95%",
+                                alignSelf: "center",
+                                borderStyle: 'dashed',
+                            }}
+                        >
+                            <View>
+                                <Text style={{ marginLeft: "2%", fontFamily: 'Poppins-SemiBold', marginTop: 5 }}>
+                                    {" "}
+                                    <FontAwesome name="star" color={"orange"} />
+                                    {" "}
+                                    {valoracion} / 10
+                                </Text>
+                                <TextInput
+                                    style={{ marginLeft: "3%", marginTop: "-2%" }}
+                                    placeholder="Añade tus calificaciones y reseñas"
+                                    placeholderTextColor="#7D5683"
+                                />
+
+                            </View>
+                            <Pressable
+                                onPress={handleCalificar}
+                                style={{
+                                    borderColor: "#402158",
+                                    borderWidth: 1,
+                                    borderRadius: 10,
+                                    paddingHorizontal: 6,
+                                    paddingVertical: 2,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    marginRight: "2%"
+                                }}
+                            >
+                                <Text style={{ fontFamily: 'Poppins-Regular', color: "#402158", textAlign: "center" }}>
+                                    Calificar
+                                </Text>
+                            </Pressable>
+
+
+                        </View>
+
+
                     </View>
-                    <Text>Proximos eventos</Text>
-                    <View style={{ flexDirection: "row" }}>
+                    <Text style={{ marginTop: "4%", fontFamily: "Poppins-SemiBold", fontSize: 18, marginLeft: "3%" }}>Eventos próximos</Text>
+                    <View style={{ flexDirection: "row", marginLeft: "3%" }}>
                         {proximosEventos.map((evento) => (
                             <Pressable
                                 onPress={() => {
@@ -219,36 +297,50 @@ const Place = () => {
                                         ("/eventos/" + evento.id) as Href
                                     );
                                 }}
-                                style={{ flexDirection: "column", flex: 1 }}
+                                style={{ flexDirection: "column", flex: 1, borderRadius: 150, marginTop: "2%" }}
                                 key={evento.id}
                             >
                                 <ImageBackground
                                     source={evento.image}
-                                    style={{ height: 200, width: 150 }}
+                                    style={{ height: 200, width: 150, borderRadius: 150, alignItems: "flex-end" }}
                                 >
                                     <View
                                         style={{
                                             backgroundColor: "white",
-                                            width: "40%",
+                                            width: "35%",
+                                            alignItems: "center",
+                                            padding: 3,
+                                            borderRadius: 10,
+                                            marginTop: 5,
+                                            marginRight: 5,
                                         }}
                                     >
-                                        <Text>
-                                            {evento.fecha.toLocaleDateString(
-                                                "es-ES",
-                                                {
-                                                    day: "numeric",
-                                                    month: "short",
-                                                }
-                                            )}
+                                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                                            {evento.fecha.getDate()}
+                                        </Text>
+                                        <Text style={{ fontSize: 12 }}>
+                                            {evento.fecha.toLocaleString("es-ES", { month: "short" })}
                                         </Text>
                                     </View>
+
                                 </ImageBackground>
-                                <Text>{evento.nombre}</Text>
+                                <Text style={{ fontFamily: 'Poppins-Regular' }}>{evento.nombre}</Text>
                             </Pressable>
                         ))}
                     </View>
-                    <Text>Fotos</Text>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Text style={{ marginTop: "4%", fontFamily: "Poppins-SemiBold", fontSize: 18, marginLeft: "3%" }}>Fotos</Text>
+                        <Link href={"/"} style={{ marginTop: "4%", fontFamily: "Poppins-regular", color: '#7D5683', marginRight: "3%" }}>
+                            Ver más <FontAwesome name="arrow-right" />
+                        </Link>
+                    </View>
                     <FlatList
+                        style={{ marginLeft: "3%", }}
                         data={fotos}
                         renderItem={({ item }) => (
                             <Image
@@ -257,7 +349,8 @@ const Place = () => {
                                     width: "auto",
                                     height: 150,
                                     aspectRatio: "16/9",
-                                    margin: 2,
+                                    margin: 3,
+                                    borderRadius: 10
                                 }}
                             />
                         )}
@@ -270,9 +363,9 @@ const Place = () => {
                             justifyContent: "space-between",
                         }}
                     >
-                        <Text>Lugares parecidos</Text>
-                        <Link href={"/"}>
-                            Ver Mas <FontAwesome name="arrow-right" />
+                        <Text style={{ marginTop: "4%", fontFamily: "Poppins-SemiBold", fontSize: 18, marginLeft: "3%" }}>Lugares parecidos</Text>
+                        <Link href={"/"} style={{ marginTop: "4%", fontFamily: "Poppins-regular", color: '#7D5683', marginRight: "3%" }}>
+                            Ver más <FontAwesome name="arrow-right" />
                         </Link>
                     </View>
 
@@ -282,21 +375,24 @@ const Place = () => {
                         renderItem={({ item }) => (
                             <Pressable
                                 onPress={() => {
-                                    router.navigate(
-                                        ("/places/" + item.id) as Href
-                                    );
+                                    router.navigate("/places/" + item.id as Href);
+                                }}
+                                style={{
+                                    alignItems: "center",
+                                    margin: 10,
                                 }}
                             >
                                 <Image
                                     source={item.image}
-                                    style={{ width: 100, height: 100 }}
+                                    style={{ width: 100, height: 100, marginBottom: 5, borderRadius: 100 }}
                                 />
-                                <Text>{item.nombre}</Text>
-                                <Text>
-                                    <FontAwesome name="star" color={"orange"} />{" "}
-                                    {item.valoracion}/10
-                                </Text>
+                                <Text style={{ fontFamily: "Poppins-Regular", textAlign: "center" }}>{item.nombre}</Text>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <FontAwesome name="star" color={"orange"} />
+                                    <Text style={{ marginLeft: 5, fontFamily: "Poppins-SemiBold" }}>{item.valoracion}/10</Text>
+                                </View>
                             </Pressable>
+
                         )}
                         horizontal
                     />
@@ -326,6 +422,29 @@ const styles = StyleSheet.create({
         width: 150,
         height: 150,
         borderRadius: 100,
+    },
+    contenedorIMG: {
+        top: -70,
+    },
+    redondoImg: {
+        width: 120,
+        height: 120,
+        borderRadius: 100,
+    },
+    nombreLocal: {
+        fontSize: 24,
+    },
+    tipoLocal: {
+        backgroundColor: "#e0dede",
+        borderRadius: 30,
+        paddingHorizontal: 5,
+        textAlign: "center",
+    },
+    localInfo: {
+        top: "-20%",
+    },
+    localData: {
+        marginTop: "-18%",
     },
 });
 
