@@ -139,7 +139,7 @@ const preview = () => {
                     value={tag}
                     onChangeText={setTag}
                     placeholder="Etiquetas"
-                    style={[{ color: "#402158", width: "auto" }]}
+                    style={[{ color: "#402158",  width: "80%" }]}
                 />
                 <Pressable onPress={addTag} style={Styles.addTag}>
                     <FontAwesome color={"white"} name="plus" />

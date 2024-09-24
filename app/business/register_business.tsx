@@ -133,6 +133,7 @@ const register_business = () => {
                 <View style={{ flexDirection: "row" }}>
                     {dataRango.map((value, index) => (
                         <Pressable
+                        key = {index}
                             onPress={() => {
                                 setRango(value);
                             }}
@@ -180,8 +181,8 @@ const register_business = () => {
                         },
                     ]}
                 >
-                    <View style={[Styles.line, { borderRadius: 10 }]} />
                     <View style={[Styles.lineSelected, { borderRadius: 10 }]} />
+                    <View style={[Styles.line, { borderRadius: 10 }]} />
                 </View>
             </View>
         </View>
