@@ -4,4 +4,4 @@ from ..models import Usuario
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = '__all__'
+        exclude = ['p_field']  

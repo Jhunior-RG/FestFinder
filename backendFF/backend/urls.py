@@ -29,7 +29,7 @@ from api.views.Genero_Evento_Vista import CrearGeneroEvento, ListarGenerosEvento
 from api.views.Evento_Vista import CrearEvento, ListarEventos
 from api.views.Entrada_Vista import CrearEntrada, ListarEntradasEvento
 from api.views.Consumo_Vista import CrearConsumo, ListarConsumosPorEstablecimiento
-from api.views.Usuario_Vista import CrearUsuario, ListarUsuarios
+from api.views.Usuario_Vista import CrearUsuario, ListarUsuarios, LoginUsuario
 from api.views.Visita_Vista import RegistrarVisita, VisitasPorEstablecimiento, VisitasPorUsuario
 from api.views.Valoracion_Establecimiento_Vista import RegistrarValoracion, ValoracionesPorEstablecimiento
 from api.views.Asistencia_Vista import RegistrarAsistencia, AsistenciasPorEventos, AsistenciasPorUsuario
@@ -52,7 +52,7 @@ urlpatterns = [
     path('entradas/evento/<int:id_evento>/', ListarEntradasEvento.as_view(), name='listar-entradas-evento'),
     path('api/consumo/', CrearConsumo.as_view(), name='crear-consumo'),
     path('api/consumos/establecimiento/<int:establecimiento_id>/', ListarConsumosPorEstablecimiento.as_view(), name='listar-consumos-por-establecimiento'),
-    path('api/usuario/', CrearUsuario.as_view(), name='crear-usuario'),
+    path('api/registrar_usuario/', CrearUsuario.as_view(), name='registrar_usuario'),
     path('api/usuarios/', ListarUsuarios.as_view(), name='listar-usuarios'),
     path('api/registrar-visita/', RegistrarVisita.as_view(), name='registrar-visita'),
     path('api/visitas/establecimiento/<int:establecimiento_id>/', VisitasPorEstablecimiento.as_view(), name='visitas-por-establecimiento'),
@@ -64,4 +64,6 @@ urlpatterns = [
     path('api/registrar-asistencia/', RegistrarAsistencia.as_view(), name='registrar-asistencia'),
     path('api/registrar-valoracion-evento/', RegistrarValoracionEvento.as_view(), name='registrar-valoracion-evento'),
     path('api/valoraciones_eventos/evento/<int:evento_id>/', ValoracionesPorEvento.as_view(), name='valoraciones-por-evento'),
+    path('api/logear_usuario/', LoginUsuario.as_view(), name='logear-usuario'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

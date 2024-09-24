@@ -124,7 +124,7 @@ USE_TZ = True
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Reemplaza con la URL de tu frontend
+    "http://localhost:8081",  # Reemplaza con la URL de tu frontend
 ]
 
 # Static files (CSS, JavaScript, Images)
