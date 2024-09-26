@@ -9,6 +9,7 @@ from ..serializers import UsuarioSerializer
 
 logger = logging.getLogger(__name__)
 
+#Registrar un nuevo usuario
 class CrearUsuario(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UsuarioSerializer(data=request.data)
@@ -18,12 +19,12 @@ class CrearUsuario(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+#Devolver todos los usuarios
 class ListarUsuarios(APIView):
     def get(self, request, *args, **kwargs):
         usuarios = Usuario.objects.all()
         serializer = UsuarioSerializer(usuarios, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class LoginUsuario(APIView):
@@ -54,7 +55,7 @@ class LoginUsuario(APIView):
                 user = Usuario.objects.get(email=email)
                 logger.info(f"Usuario encontrado con email: {email}")
                 
-                if password == user.p_field: # Comprobar la contraseña
+                if check_password(password, user.p_field):  # Comprobar la contraseña
                     logger.info(f"Contraseña correcta para el usuario {email}")
                     serializer = UsuarioSerializer(user)
                     return Response(serializer.data, status=status.HTTP_200_OK)

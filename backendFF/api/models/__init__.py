@@ -7,6 +7,7 @@ from .EtiquetaEstablecimiento import EtiquetaEstablecimiento
 from .Consumo import Consumo
 from .GaleriaEstablecimiento import GaleriaEstablecimiento
 from .Visita import Visita
+from .horariosEstablecimiento import horariosEstablecimiento
 
 from .GeneroEvento import GeneroEvento
 from .Evento import Evento
