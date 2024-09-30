@@ -8,7 +8,7 @@ import { router } from "expo-router";
 
 const profile = () => {
     const { session, signOut } = useSession();
-    const { name, photo, email } = session.data.user;
+    const { name, photo, email } = session;
 
     return (
         <View>

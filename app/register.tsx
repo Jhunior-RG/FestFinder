@@ -5,28 +5,28 @@ import { useState } from "react";
 import LoginGoogle from "@/components/LoginGoogle";
 
 const Register = () => {
-    const [name, setName] = useState("");
+    const [nombre, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [p_field, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [telephone, setTelephone] = useState("");
+    const [telefono, setTelephone] = useState("");
 
     const handleSubmit = async () => {
-        if ([name, email, password, confirmPassword, telephone].includes("")) {
+        if ([nombre, email, p_field, confirmPassword, telefono].includes("")) {
             alert("Todos los campos son obligatorios");
             return null;
         }
-        if (password !== confirmPassword) {
-            alert("password is not correct");
+        if (p_field !== confirmPassword) {
+            alert("p_field is not correct");
             return null;
         }
         // send to the server
-        const data = { name, email, telephone, password, confirmPassword };
+        const data = { nombre, email, telefono, p_field};
 
         const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
         try {
-            const response = await fetch(API_URL + "/registrar_usuario", {
+            const response = await fetch(API_URL + "/api/usuario/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -35,7 +35,7 @@ const Register = () => {
             if (response.ok) {
                 const userData = await response.json();
                 console.log("Usuario registrado:", userData);
-                alert("Registro exitoso");
+                alert("Usuario registrado")         
             } else {
                 alert("Error al registrar");
             }
