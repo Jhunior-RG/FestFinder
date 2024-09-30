@@ -1,9 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, router, type Href } from "expo-router";
+import { Link, type Href } from "expo-router";
 import { useEffect, useState } from "react";
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { Button, Image, ImageBackground, Pressable, Text, View } from "react-native";
+import { ImageBackground, Text, View } from "react-native";
 
 interface Place {
     id: number;

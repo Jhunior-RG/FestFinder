@@ -1,9 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, router, useLocalSearchParams, type Href } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import Styles from "@/globalStyles/styles";
+import moment from "moment";
 
 import {
     ImageBackground,
@@ -15,7 +16,7 @@ import {
     TextInput,
     ScrollView,
     FlatList,
-    SafeAreaView,
+    Modal,
 } from "react-native";
 
 type Establecimiento = {
@@ -45,6 +46,26 @@ type Lugar = {
 type Params = {
     id: string;
 };
+
+interface Horario {
+    desde: string;
+    hasta: string;
+}
+interface HorarioAtencion {
+    dia: number;
+    horario: Horario | null;
+}
+
+const days = [
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado",
+    "Domingo",
+];
+
 const Place = () => {
     const [establecimiento, setEstablecimiento] =
         useState<Establecimiento | null>(null);
@@ -53,11 +74,18 @@ const Place = () => {
     const [proximosEventos, setProximosEventos] = useState<Evento[]>([]);
     const [fotos, setFotos] = useState<any[]>([]);
     const [lugaresParecidos, setLugaresParecidos] = useState<Lugar[]>([]);
+    const [horarioAtencion, setHorarioAtencion] = useState<HorarioAtencion[]>(
+        []
+    );
+    const [horarioOpened, setHorarioOpened] = useState<boolean>(false);
+    const [establecimientoAbierto, setEstablecimientoAbierto] =
+        useState<Boolean>(false);
+
     const params = useLocalSearchParams();
     const [fontsLoaded] = useFonts({
-        'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
-        'Poppins-Bold': require('../../assets/fonts/Poppins-Bold.ttf'),
-        'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
+        "Poppins-Regular": require("../../assets/fonts/Poppins-Regular.ttf"),
+        "Poppins-Bold": require("../../assets/fonts/Poppins-Bold.ttf"),
+        "Poppins-SemiBold": require("../../assets/fonts/Poppins-SemiBold.ttf"),
     });
     useEffect(() => {
         const prepare = async () => {
@@ -153,6 +181,71 @@ const Place = () => {
             },
         ];
 
+        const horarioAtencion = [
+            {
+                dia: 0,
+                horario: {
+                    desde: "09:00",
+                    hasta: "01:00",
+                },
+            },
+            {
+                dia: 1,
+                horario: null,
+            },
+            {
+                dia: 2,
+                horario: null,
+            },
+            {
+                dia: 3,
+                horario: null,
+            },
+            {
+                dia: 4,
+                horario: null,
+            },
+            {
+                dia: 5,
+                horario: {
+                    desde: "19:00",
+                    hasta: "01:00",
+                },
+            },
+            {
+                dia: 6,
+                horario: {
+                    desde: "19:00",
+                    hasta: "01:00",
+                },
+            },
+        ];
+
+        const isOpenToday = () => {
+            const today = getDay(new Date());
+            const atencionToday = horarioAtencion.filter(
+                (horario) => horario.dia === today
+            )[0];
+            const horarioToday = atencionToday.horario;
+
+            if (!horarioToday) return false;
+
+            const desde = moment(horarioToday.desde, "HH:mm");
+            const hasta = moment(horarioToday.hasta, "HH:mm");
+            const current = moment();
+
+            if (hasta.isBefore(desde)) {
+                // Verificar si está entre 'desde' y medianoche o entre medianoche y 'hasta'
+                return (
+                    current.isBetween(desde, moment("23:59:59", "HH:mm")) ||
+                    current.isBetween(moment("00:00", "HH:mm"), hasta)
+                );
+            }
+
+            // Si no cruza medianoche, comprobar de forma estándar
+            return current.isBetween(desde, hasta);
+        };
+
         // Establecer los estados
         setEstablecimiento(establecimiento);
         setEtiquetas(etiquetas);
@@ -160,14 +253,74 @@ const Place = () => {
         setProximosEventos(proximosEventos);
         setFotos(fotos);
         setLugaresParecidos(lugaresParecidos);
+        setHorarioAtencion(horarioAtencion);
+        setEstablecimientoAbierto(isOpenToday());
     }, []);
 
     const handleCalificar = () => {
         alert("enviando calificacion");
     };
 
+    const handleHorariosAtencion = () => {
+        setHorarioOpened(true);
+    };
+
+    const getDay = (date: Date) => {
+        const day = date.getDay();
+        return day === 0 ? 6 : day - 1;
+    };
+
     return (
         <ScrollView style={styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={horarioOpened}
+                onRequestClose={() => {}}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <View
+                        style={{
+                            padding: 20,
+                            backgroundColor: "white",
+                            borderRadius: 10,
+                            elevation: 5,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.8,
+                            shadowRadius: 2,
+                        }}
+                    >
+                        <Pressable
+                            onPress={() => {
+                                setHorarioOpened(false);
+                            }}
+                        >
+                            <FontAwesome name="close" size={22} />
+                        </Pressable>
+                        <Text>Horarios de Atencion</Text>
+                        {horarioAtencion.map((horario, index) => (
+                            <View style={{ flexDirection: "row",justifyContent: "space-between" }}>
+                                <Text>{days[horario.dia]}</Text>
+
+                                <Text>
+                                    {horario.horario
+                                        ? horario.horario.desde +
+                                          " / " +
+                                          horario.horario.hasta
+                                        : "Cerrado"}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+            </Modal>
+
             {establecimiento && (
                 <>
                     <ImageBackground
@@ -179,21 +332,35 @@ const Place = () => {
                                 name="arrow-left"
                                 color={"white"}
                                 size={30}
-                                style={{ position: "absolute", top: 40, left: 10 }}
+                                style={{
+                                    position: "absolute",
+                                    top: 40,
+                                    left: 10,
+                                }}
                             />
                         </Pressable>
                         <FontAwesome
                             name="heart"
                             color={"white"}
                             size={30}
-                            style={{ position: "absolute", bottom: 10, right: 10 }}
+                            style={{
+                                position: "absolute",
+                                bottom: 10,
+                                right: 10,
+                            }}
                         />
                     </ImageBackground>
 
-                    <Image source={establecimiento.logo} style={[styles.redondoImg, styles.contenedorIMG,
-                    {
-                        left: "2%"
-                    },]} />
+                    <Image
+                        source={establecimiento.logo}
+                        style={[
+                            styles.redondoImg,
+                            styles.contenedorIMG,
+                            {
+                                left: "2%",
+                            },
+                        ]}
+                    />
                     <View
                         style={{
                             flexDirection: "row",
@@ -201,8 +368,24 @@ const Place = () => {
                         }}
                     >
                         <View style={styles.localInfo}>
-                            <Text style={[{ fontFamily: 'Poppins-Bold' }, { left: '10%' }, styles.nombreLocal]}>{establecimiento.nombre}</Text>
-                            <Text style={[{ fontFamily: 'Poppins-Regular' }, { left: '10%' }, styles.tipoLocal]}>{establecimiento.tipo}</Text>
+                            <Text
+                                style={[
+                                    { fontFamily: "Poppins-Bold" },
+                                    { left: "10%" },
+                                    styles.nombreLocal,
+                                ]}
+                            >
+                                {establecimiento.nombre}
+                            </Text>
+                            <Text
+                                style={[
+                                    { fontFamily: "Poppins-Regular" },
+                                    { left: "10%" },
+                                    styles.tipoLocal,
+                                ]}
+                            >
+                                {establecimiento.tipo}
+                            </Text>
                         </View>
                         <View style={{ top: "-20%", right: "40%" }}>
                             <Link href={"https://wa.link/9nq0oq"}>
@@ -214,30 +397,79 @@ const Place = () => {
                             </Link>
                         </View>
                     </View>
+
                     <View style={styles.localData}>
-                        <Text style={[{ fontFamily: 'Poppins-Regular' }, { marginLeft: 10, fontSize: 14 }]}>
+                        <Text
+                            style={
+                                establecimientoAbierto
+                                    ? { color: "green" }
+                                    : { color: "red" }
+                            }
+                        >
+                            <FontAwesome
+                                name="circle"
+                                color={establecimientoAbierto ? "green" : "red"}
+                                size={15}
+                            />
+                            {establecimientoAbierto ? "Abierto" : "Cerrado"}
+                        </Text>
+                        <Pressable onPress={handleHorariosAtencion}>
+                            <Text>
+                                Ver horario y dias de atencion
+                                <FontAwesome name="chevron-down" size={15} />
+                            </Text>
+                        </Pressable>
+
+                        <Text
+                            style={[
+                                { fontFamily: "Poppins-Regular" },
+                                { marginLeft: 10, fontSize: 14 },
+                            ]}
+                        >
                             <FontAwesome
                                 name="location-arrow"
-                                style={{ marginRight: 10 }} />
+                                style={{ marginRight: 10 }}
+                            />
                             {establecimiento.direccion}
                         </Text>
                         <View
                             style={{
                                 flexDirection: "row",
                                 justifyContent: "space-around",
-
                             }}
                         >
                             {etiquetas.map((etiqueta) => (
                                 <Text
                                     key={etiqueta}
-                                    style={[{ fontFamily: 'Poppins-Regular', marginTop: "3%" }, { backgroundColor: "rgba(235, 182, 255, 0.5)", borderRadius: 10, paddingHorizontal: 8 }]}>
+                                    style={[
+                                        {
+                                            fontFamily: "Poppins-Regular",
+                                            marginTop: "3%",
+                                        },
+                                        {
+                                            backgroundColor:
+                                                "rgba(235, 182, 255, 0.5)",
+                                            borderRadius: 10,
+                                            paddingHorizontal: 8,
+                                        },
+                                    ]}
+                                >
                                     {etiqueta}
                                 </Text>
-
                             ))}
                         </View>
-                        <Text style={[{ fontFamily: 'Poppins-Regular' }, { color: "#402158", marginLeft: "3%", marginTop: "3%" }]}>Calificación</Text>
+                        <Text
+                            style={[
+                                { fontFamily: "Poppins-Regular" },
+                                {
+                                    color: "#402158",
+                                    marginLeft: "3%",
+                                    marginTop: "3%",
+                                },
+                            ]}
+                        >
+                            Calificación
+                        </Text>
                         <View
                             style={{
                                 borderColor: "#7D5683",
@@ -248,22 +480,32 @@ const Place = () => {
                                 alignItems: "center",
                                 width: "95%",
                                 alignSelf: "center",
-                                borderStyle: 'dashed',
+                                borderStyle: "dashed",
                             }}
                         >
                             <View>
-                                <Text style={{ marginLeft: "2%", fontFamily: 'Poppins-SemiBold', marginTop: 5 }}>
+                                <Text
+                                    style={{
+                                        marginLeft: "2%",
+                                        fontFamily: "Poppins-SemiBold",
+                                        marginTop: 5,
+                                    }}
+                                >
                                     {" "}
-                                    <FontAwesome name="star" color={"orange"} />
-                                    {" "}
+                                    <FontAwesome
+                                        name="star"
+                                        color={"orange"}
+                                    />{" "}
                                     {valoracion} / 10
                                 </Text>
                                 <TextInput
-                                    style={{ marginLeft: "3%", marginTop: "-2%" }}
+                                    style={{
+                                        marginLeft: "3%",
+                                        marginTop: "-2%",
+                                    }}
                                     placeholder="Añade tus calificaciones y reseñas"
                                     placeholderTextColor="#7D5683"
                                 />
-
                             </View>
                             <Pressable
                                 onPress={handleCalificar}
@@ -275,20 +517,31 @@ const Place = () => {
                                     paddingVertical: 2,
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    marginRight: "2%"
+                                    marginRight: "2%",
                                 }}
                             >
-                                <Text style={{ fontFamily: 'Poppins-Regular', color: "#402158", textAlign: "center" }}>
+                                <Text
+                                    style={{
+                                        fontFamily: "Poppins-Regular",
+                                        color: "#402158",
+                                        textAlign: "center",
+                                    }}
+                                >
                                     Calificar
                                 </Text>
                             </Pressable>
-
-
                         </View>
-
-
                     </View>
-                    <Text style={{ marginTop: "4%", fontFamily: "Poppins-SemiBold", fontSize: 18, marginLeft: "3%" }}>Eventos próximos</Text>
+                    <Text
+                        style={{
+                            marginTop: "4%",
+                            fontFamily: "Poppins-SemiBold",
+                            fontSize: 18,
+                            marginLeft: "3%",
+                        }}
+                    >
+                        Eventos próximos
+                    </Text>
                     <View style={{ flexDirection: "row", marginLeft: "3%" }}>
                         {proximosEventos.map((evento) => (
                             <Pressable
@@ -297,12 +550,22 @@ const Place = () => {
                                         ("/eventos/" + evento.id) as Href
                                     );
                                 }}
-                                style={{ flexDirection: "column", flex: 1, borderRadius: 150, marginTop: "2%" }}
+                                style={{
+                                    flexDirection: "column",
+                                    flex: 1,
+                                    borderRadius: 150,
+                                    marginTop: "2%",
+                                }}
                                 key={evento.id}
                             >
                                 <ImageBackground
                                     source={evento.image}
-                                    style={{ height: 200, width: 150, borderRadius: 150, alignItems: "flex-end" }}
+                                    style={{
+                                        height: 200,
+                                        width: 150,
+                                        borderRadius: 150,
+                                        alignItems: "flex-end",
+                                    }}
                                 >
                                     <View
                                         style={{
@@ -315,16 +578,25 @@ const Place = () => {
                                             marginRight: 5,
                                         }}
                                     >
-                                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 24,
+                                                fontWeight: "bold",
+                                            }}
+                                        >
                                             {evento.fecha.getDate()}
                                         </Text>
                                         <Text style={{ fontSize: 12 }}>
-                                            {evento.fecha.toLocaleString("es-ES", { month: "short" })}
+                                            {evento.fecha.toLocaleString(
+                                                "es-ES",
+                                                { month: "short" }
+                                            )}
                                         </Text>
                                     </View>
-
                                 </ImageBackground>
-                                <Text style={{ fontFamily: 'Poppins-Regular' }}>{evento.nombre}</Text>
+                                <Text style={{ fontFamily: "Poppins-Regular" }}>
+                                    {evento.nombre}
+                                </Text>
                             </Pressable>
                         ))}
                     </View>
@@ -334,13 +606,30 @@ const Place = () => {
                             justifyContent: "space-between",
                         }}
                     >
-                        <Text style={{ marginTop: "4%", fontFamily: "Poppins-SemiBold", fontSize: 18, marginLeft: "3%" }}>Fotos</Text>
-                        <Link href={"/"} style={{ marginTop: "4%", fontFamily: "Poppins-regular", color: '#7D5683', marginRight: "3%" }}>
+                        <Text
+                            style={{
+                                marginTop: "4%",
+                                fontFamily: "Poppins-SemiBold",
+                                fontSize: 18,
+                                marginLeft: "3%",
+                            }}
+                        >
+                            Fotos
+                        </Text>
+                        <Link
+                            href={"/"}
+                            style={{
+                                marginTop: "4%",
+                                fontFamily: "Poppins-regular",
+                                color: "#7D5683",
+                                marginRight: "3%",
+                            }}
+                        >
                             Ver más <FontAwesome name="arrow-right" />
                         </Link>
                     </View>
                     <FlatList
-                        style={{ marginLeft: "3%", }}
+                        style={{ marginLeft: "3%" }}
                         data={fotos}
                         renderItem={({ item }) => (
                             <Image
@@ -350,7 +639,7 @@ const Place = () => {
                                     height: 150,
                                     aspectRatio: "16/9",
                                     margin: 3,
-                                    borderRadius: 10
+                                    borderRadius: 10,
                                 }}
                             />
                         )}
@@ -363,8 +652,25 @@ const Place = () => {
                             justifyContent: "space-between",
                         }}
                     >
-                        <Text style={{ marginTop: "4%", fontFamily: "Poppins-SemiBold", fontSize: 18, marginLeft: "3%" }}>Lugares parecidos</Text>
-                        <Link href={"/"} style={{ marginTop: "4%", fontFamily: "Poppins-regular", color: '#7D5683', marginRight: "3%" }}>
+                        <Text
+                            style={{
+                                marginTop: "4%",
+                                fontFamily: "Poppins-SemiBold",
+                                fontSize: 18,
+                                marginLeft: "3%",
+                            }}
+                        >
+                            Lugares parecidos
+                        </Text>
+                        <Link
+                            href={"/"}
+                            style={{
+                                marginTop: "4%",
+                                fontFamily: "Poppins-regular",
+                                color: "#7D5683",
+                                marginRight: "3%",
+                            }}
+                        >
                             Ver más <FontAwesome name="arrow-right" />
                         </Link>
                     </View>
@@ -375,7 +681,9 @@ const Place = () => {
                         renderItem={({ item }) => (
                             <Pressable
                                 onPress={() => {
-                                    router.navigate("/places/" + item.id as Href);
+                                    router.navigate(
+                                        ("/places/" + item.id) as Href
+                                    );
                                 }}
                                 style={{
                                     alignItems: "center",
@@ -384,15 +692,38 @@ const Place = () => {
                             >
                                 <Image
                                     source={item.image}
-                                    style={{ width: 100, height: 100, marginBottom: 5, borderRadius: 100 }}
+                                    style={{
+                                        width: 100,
+                                        height: 100,
+                                        marginBottom: 5,
+                                        borderRadius: 100,
+                                    }}
                                 />
-                                <Text style={{ fontFamily: "Poppins-Regular", textAlign: "center" }}>{item.nombre}</Text>
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <Text
+                                    style={{
+                                        fontFamily: "Poppins-Regular",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {item.nombre}
+                                </Text>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                    }}
+                                >
                                     <FontAwesome name="star" color={"orange"} />
-                                    <Text style={{ marginLeft: 5, fontFamily: "Poppins-SemiBold" }}>{item.valoracion}/10</Text>
+                                    <Text
+                                        style={{
+                                            marginLeft: 5,
+                                            fontFamily: "Poppins-SemiBold",
+                                        }}
+                                    >
+                                        {item.valoracion}/10
+                                    </Text>
                                 </View>
                             </Pressable>
-
                         )}
                         horizontal
                     />
