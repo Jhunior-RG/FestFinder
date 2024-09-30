@@ -21,7 +21,7 @@ const Register = () => {
             return null;
         }
         // send to the server
-        const data = { nombre, email, telefono, p_field};
+        const data = { nombre, email, telefono, p_field, imagen:3};
 
         const API_URL = process.env.EXPO_PUBLIC_API_URL;
 

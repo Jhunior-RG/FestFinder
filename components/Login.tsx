@@ -1,4 +1,4 @@
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, Text, TextInput, TouchableOpacity, View, Image } from "react-native";
 import LoginGoogle from "./LoginGoogle";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ const Login = () => {
     useEffect(() => { }, []);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [userData, setUserData] = useState(null);  // Almacena los datos del usuario
+    const [imageUri, setImageUri] = useState("");    // Almacena la URI de la imagen
 
     const handleSubmit = async () => {
         if ([email, password].includes("")) {
@@ -19,23 +21,33 @@ const Login = () => {
             return;
         }
         // Send to the server
-        const data = { email, password, g_id: ""}
+        const data = { email, password, g_id: "" }
         const API_URL = process.env.EXPO_PUBLIC_API_URL
 
         try {
-
             const response = await fetch(`${API_URL}/api/logear_usuario/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             });
-            
+
             if (response.ok) {
                 const userData = await response.json();
-                console.log('Usuario logeado:', userData);
-                alert('Inicio de sesion exitoso');
+                setUserData(userData);  // Guarda los datos del usuario
+
+                // Obtener la imagen del usuario
+                const imageResponse = await fetch(`${API_URL}/api/imagen/${userData.imagen}/`);
+                if (imageResponse.ok) {
+                    const imageData = await imageResponse.json();
+                    const fullImageUrl = `${API_URL}${imageData.imagen}`;  // URL completa de la imagen
+                    setImageUri(fullImageUrl);  // Guarda la URI de la imagen
+                } else {
+                    alert('Error al cargar la imagen');
+                }
+
+                alert('Inicio de sesión exitoso');
             } else {
-                alert('Error en el inicio de sesion');
+                alert('Error en el inicio de sesión');
             }
         } catch (error) {
             console.error(error);
@@ -63,8 +75,25 @@ const Login = () => {
                 style={Styles.button}
                 onPress={handleSubmit}
             >
-                <Text style={Styles.buttonText}>Iniciar Sesion</Text>
+                <Text style={Styles.buttonText}>Iniciar Sesión</Text>
             </TouchableOpacity>
+
+            {userData && (
+                <>
+                    <Text style={Styles.welcomeText}>Bienvenido {userData.nombre}</Text>
+
+                    {/* Renderizar la imagen si está disponible */}
+                    {imageUri ? (
+                        <Image 
+                            source={{ uri: imageUri }} 
+                            style={{ width: 100, height: 100, borderRadius: 50 }} 
+                        />
+                    ) : (
+                        <Text>No se encontró imagen</Text>
+                    )}
+                </>
+            )}
+
             <View style={styles.lineContainer}>
                 <View style={styles.line} />
                 <Text style={styles.lineText}>Inicia sesión usando</Text>
@@ -74,6 +103,7 @@ const Login = () => {
         </>
     );
 };
+
 const styles = {
     lineContainer: {
         flexDirection: "row" as const,
@@ -93,6 +123,5 @@ const styles = {
         fontWeight: "500" as const,
     },
 };
-
 
 export default Login;
