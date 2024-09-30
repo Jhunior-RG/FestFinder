@@ -19,12 +19,12 @@ const Login = () => {
             return;
         }
         // Send to the server
-        const data = { email, password }
+        const data = { email, password, g_id: ""}
         const API_URL = process.env.EXPO_PUBLIC_API_URL
 
         try {
 
-            const response = await fetch(`${API_URL}/logear_usuario`, {
+            const response = await fetch(`${API_URL}/api/logear_usuario/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
