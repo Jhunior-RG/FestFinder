@@ -1,6 +1,8 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, router, type Href } from "expo-router";
+import Styles from "@/globalStyles/styles";
 import { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import {
     FlatList,
     ImageBackground,
@@ -9,6 +11,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { red } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 interface Place {
     id: number;
@@ -63,9 +66,14 @@ const inicio = () => {
                     alignItems: "center",
                     justifyContent: "space-between",
                     flexDirection: "row",
+                    borderRadius: 5,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.3,
+                    bottom:5,
                 }}
             >
-                <FontAwesome name="bell" size={23} color={"white"} />
+                <FontAwesome style = {{marginLeft:"7%"}}name="bell" size={23} color={"white"} />
                 {openSearch ? (
                     <TextInput
                         placeholder="Buscar"
@@ -89,13 +97,14 @@ const inicio = () => {
                 )}
 
                 <Pressable onPress={searchPress}>
-                    <FontAwesome name="search" size={23} color={"white"} />
+                    <FontAwesome name="search" size={23} color={"white"} style={{marginRight:"7%"}} />
                 </Pressable>
             </View>
 
-            <Text>Categorias</Text>
+            <Text style={styles.textoTitulo}>Categorias</Text>
             <FlatList
                 data={tags}
+                style = {styles.slider}
                 keyExtractor={(item) => item.toString()}
                 renderItem={({ item }) => (
                     <Pressable
@@ -109,6 +118,13 @@ const inicio = () => {
                             style={{
                                 fontFamily: "Poppins-Regular",
                                 textAlign: "center",
+                                borderRadius: 20,
+                                borderWidth: 2,
+                                borderColor: "#956ca3",
+                                color: "#956ca3",
+                                paddingHorizontal: 10,
+                                paddingVertical: 4,  
+                                lineHeight: 24,      
                             }}
                         >
                             {item}
@@ -119,24 +135,16 @@ const inicio = () => {
             />
 
             <Text
-                style={{
-                    marginLeft: "2%",
-                    fontFamily: "Poppins-SemiBold",
-                    marginTop: 50,
-                }}
+                style={[styles.textoTitulo, {marginTop: "5%"}]}
             >
-                Inicio
+                Eventos populares
             </Text>
             <Text
-                style={{
-                    marginLeft: "2%",
-                    fontFamily: "Poppins-SemiBold",
-                    marginTop: 50,
-                }}
+                style={[styles.textoTitulo,{marginTop:"5%"}]}
             >
                 Lugares populares
             </Text>
-            <View style={{ marginLeft: "2%" }}>
+            <View style={{ marginLeft: "2%", marginTop:"3%" }}>
                 {popularPlaces.map((place) => (
                     <Link
                         href={("/places/" + place.id) as Href}
@@ -187,5 +195,17 @@ const inicio = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    textoTitulo: {
+        fontWeight: "bold" as "bold",
+        fontSize: 18,
+        marginLeft: "3%",
+    },
+    slider:{
+        marginLeft: "5%",
+        marginTop: "3%",
+    },
+})
 
 export default inicio;
