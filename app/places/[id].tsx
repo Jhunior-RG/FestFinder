@@ -305,7 +305,13 @@ const Place = () => {
                         </Pressable>
                         <Text>Horarios de Atencion</Text>
                         {horarioAtencion.map((horario, index) => (
-                            <View style={{ flexDirection: "row",justifyContent: "space-between" }}>
+                            <View
+                                key={index}
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                }}
+                            >
                                 <Text>{days[horario.dia]}</Text>
 
                                 <Text>

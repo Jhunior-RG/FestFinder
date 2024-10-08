@@ -1,7 +1,14 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, type Href } from "expo-router";
+import { Link, router, type Href } from "expo-router";
 import { useEffect, useState } from "react";
-import { ImageBackground, Text, View } from "react-native";
+import {
+    FlatList,
+    ImageBackground,
+    Pressable,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
 
 interface Place {
     id: number;
@@ -13,6 +20,9 @@ interface Place {
 
 const inicio = () => {
     const [popularPlaces, setPopularPlaces] = useState<Place[]>([]);
+    const [tags, setTags] = useState<string[]>([]);
+    const [openSearch, setOpenSearch] = useState(false);
+    const [search, setSearch] = useState("");
     useEffect(() => {
         const places = [
             {
@@ -23,29 +33,149 @@ const inicio = () => {
                 uri: require("../../assets/images/alice-park.png"),
             },
         ];
-
+        const newTags = ["Fiestas", "Conciertos", "Fiestas +21", "Bailes"];
         setPopularPlaces(places);
+        setTags(newTags);
     }, []);
+
+    const handleSubmitSearch = () => {
+        console.log("buscando " + search);
+        setOpenSearch(false);
+    };
+    
+    const searchPress = ()=> {
+        if(openSearch) {
+            handleSubmitSearch()
+        }
+        setOpenSearch(!openSearch)
+    }
+
     return (
         <View>
-            <Text style={{ marginLeft: "2%", fontFamily: 'Poppins-SemiBold', marginTop: 50 }}>Inicio</Text>
-            <Text style={{ marginLeft: "2%", fontFamily: 'Poppins-SemiBold', marginTop: 50 }}>Lugares populares</Text>
+            {/* Notch*/}
+            <View
+                style={{ backgroundColor: "#402158", paddingVertical: 20 }}
+            ></View>
+            <View
+                style={{
+                    backgroundColor: "#402158",
+                    paddingVertical: 15,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                }}
+            >
+                <FontAwesome name="bell" size={23} color={"white"} />
+                {openSearch ? (
+                    <TextInput
+                        placeholder="Buscar"
+                        value={search}
+                        onChangeText={(text) => setSearch(text)}
+                        placeholderTextColor={"gray"}
+                        autoFocus
+                        onSubmitEditing={handleSubmitSearch}
+                    />
+                ) : (
+                    <Pressable
+                        style={{ flexDirection: "row" }}
+                        onPress={() => console.log("cambiando de ciudad")}
+                    >
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={{ color: "white" }}>Ciudad</Text>
+                            <Text style={{ color: "white" }}>Cochabamba</Text>
+                        </View>
+                        <FontAwesome name="sort-down" size={23} color="white" />
+                    </Pressable>
+                )}
+
+                <Pressable onPress={searchPress}>
+                    <FontAwesome name="search" size={23} color={"white"} />
+                </Pressable>
+            </View>
+
+            <Text>Categorias</Text>
+            <FlatList
+                data={tags}
+                keyExtractor={(item) => item.toString()}
+                renderItem={({ item }) => (
+                    <Pressable
+                        onPress={() => {}}
+                        style={{
+                            alignItems: "center",
+                            marginHorizontal: 10,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: "Poppins-Regular",
+                                textAlign: "center",
+                            }}
+                        >
+                            {item}
+                        </Text>
+                    </Pressable>
+                )}
+                horizontal
+            />
+
+            <Text
+                style={{
+                    marginLeft: "2%",
+                    fontFamily: "Poppins-SemiBold",
+                    marginTop: 50,
+                }}
+            >
+                Inicio
+            </Text>
+            <Text
+                style={{
+                    marginLeft: "2%",
+                    fontFamily: "Poppins-SemiBold",
+                    marginTop: 50,
+                }}
+            >
+                Lugares populares
+            </Text>
             <View style={{ marginLeft: "2%" }}>
                 {popularPlaces.map((place) => (
-                    <Link href={("/places/" + place.id) as Href} key={place.id} style={{ marginLeft: "3%" }}>
+                    <Link
+                        href={("/places/" + place.id) as Href}
+                        key={place.id}
+                        style={{ marginLeft: "3%" }}
+                    >
                         <ImageBackground
                             resizeMode="cover"
                             source={place.uri}
-                            style={{ width: 150, height: 200, borderRadius: 10, overflow: 'hidden' }}
+                            style={{
+                                width: 150,
+                                height: 200,
+                                borderRadius: 10,
+                                overflow: "hidden",
+                            }}
                         >
-                            <View style={{
-                                flex: 1, 
-                                justifyContent: 'flex-end', 
-                                alignItems: 'center', 
-                                padding: 5, 
-                            }}>
-                                <Text style={{ color: "white", fontFamily: 'Poppins-Regular', textAlign: 'center' }}>{place.name}</Text>
-                                <Text style={{ color: "white", textAlign: 'center' }}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: "flex-end",
+                                    alignItems: "center",
+                                    padding: 5,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        fontFamily: "Poppins-Regular",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {place.name}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        textAlign: "center",
+                                    }}
+                                >
                                     <FontAwesome name="star" color={"yellow"} />
                                     {place.score} / 10
                                 </Text>
@@ -54,7 +184,6 @@ const inicio = () => {
                     </Link>
                 ))}
             </View>
-
         </View>
     );
 };

@@ -47,17 +47,23 @@ const register_business = () => {
     };
     return (
         <View style={[Styles.container, { justifyContent: "space-between" }]}>
-                <Pressable
-                    onPress={router.back}
-                    style={{
-                        left: "-40%",
-                        marginTop: 30,
-                        zIndex: 1,
-                    }}
-                >
-                    <FontAwesome name="arrow-left" size={25} />
-                </Pressable>
-            <View style={{ width: "100%", alignItems: "center",justifyContent: "center" }}>
+            <Pressable
+                onPress={router.back}
+                style={{
+                    left: "-40%",
+                    marginTop: 30,
+                    zIndex: 1,
+                }}
+            >
+                <FontAwesome name="arrow-left" size={25} />
+            </Pressable>
+            <View
+                style={{
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
                 <Image
                     source={require("../../assets/images/festLogo.png")}
                     style={Styles.festLogo}
@@ -133,7 +139,7 @@ const register_business = () => {
                 <View style={{ flexDirection: "row" }}>
                     {dataRango.map((value, index) => (
                         <Pressable
-                        key = {index}
+                            key={index}
                             onPress={() => {
                                 setRango(value);
                             }}

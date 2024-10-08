@@ -1,9 +1,12 @@
-import Styles from "@/globalStyles/styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
-import { Pressable, Text, View, type GestureResponderEvent, StyleSheet } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
-
+import {
+    Pressable,
+    Text,
+    View,
+    type GestureResponderEvent,
+    StyleSheet,
+} from "react-native";
 
 interface ItemProfileProps {
     onPress: (event: GestureResponderEvent) => void;
@@ -25,7 +28,12 @@ const ItemProfile: React.FC<ItemProfileProps> = ({
             <View style={styles.itemContent}>
                 <FontAwesome size={20} name={icon} color={color} />
                 <Text style={{ color: textColor, marginLeft: 15 }}>{text}</Text>
-                <FontAwesome name="angle-right" size={20} color="#402158" style={styles.arrow} />
+                <FontAwesome
+                    name="angle-right"
+                    size={20}
+                    color="#402158"
+                    style={styles.arrow}
+                />
             </View>
             <View style={styles.separator} />
         </Pressable>
@@ -41,14 +49,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     arrow: {
-        marginLeft: 'auto',
-        marginRight: 30, 
+        marginLeft: "auto",
+        marginRight: 30,
     },
     separator: {
         height: 1,
-        backgroundColor: '#D3D3D3', 
-        width: '95%',
-        alignSelf: 'center',
+        backgroundColor: "#D3D3D3",
+        width: "95%",
+        alignSelf: "center",
         marginVertical: 10,
         marginRight: 20,
     },

@@ -113,7 +113,7 @@ const preview = () => {
             </Pressable>
 
             {tags &&
-                tags.map((tag) => (
+                tags.map((tag,index) => (
                     <View
                         style={[
                             Styles.input,
@@ -122,6 +122,7 @@ const preview = () => {
                                 justifyContent: "space-between",
                             },
                         ]}
+                        key={index}
                     >
                         <Text>{tag}</Text>
                         <Pressable
