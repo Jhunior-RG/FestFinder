@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, router, type Href } from "expo-router";
 import Styles from "@/globalStyles/styles";
 import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import {
     FlatList,
     ImageBackground,
@@ -21,11 +21,22 @@ interface Place {
     uri: any;
 }
 
+interface Evento {
+    id_evento: number;
+    nombre: string;
+    banner: any;
+    fecha_final: any;
+    horario_fin: any;
+}
+
 const inicio = () => {
     const [popularPlaces, setPopularPlaces] = useState<Place[]>([]);
     const [tags, setTags] = useState<string[]>([]);
     const [openSearch, setOpenSearch] = useState(false);
     const [search, setSearch] = useState("");
+    const [eventosDelMes, setEventosDelMes] = useState<Evento[]>([]);
+    const [eventosDelDia, setEventosDelDia] = useState<Evento[]>([]);
+
     useEffect(() => {
         const places = [
             {
@@ -39,7 +50,87 @@ const inicio = () => {
         const newTags = ["Fiestas", "Conciertos", "Fiestas +21", "Bailes"];
         setPopularPlaces(places);
         setTags(newTags);
+
+        fetchEventosDelMes();
+        fetchEventosDelDia();
+        //fetchEstablecimientos();
+        //fetchCategoriasEstablecimientos();
     }, []);
+
+
+    const fetchEstablecimientos = async () => {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/establecimientos/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            console.log(data);
+            setPopularPlaces(data);
+        } catch (error) {
+            Alert.alert("Error", "No se pudo obtener los establecimientos");
+            console.error("Error fetching establecimientos:", error);
+        }
+    };
+
+    const fetchCategoriasEstablecimientos = async () => {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/categorias-establecimientos/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            console.log(data);
+            setTags(data);
+        } catch (error) {
+            Alert.alert("Error", "No se pudo obtener los establecimientos");
+            console.error("Error fetching establecimientos:", error);
+        }
+    };
+    
+    const fetchEventosDelMes = async () => {
+        try {
+            console.log(new Date().toISOString().split("T")[0]+"");
+
+            const response = await fetch("http://127.0.0.1:8000/api/eventos_mes/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ fecha: new Date().toISOString().split("T")[0] }), // Envía la fecha actual
+            });
+            const data = await response.json();
+            console.log(data);
+            setEventosDelMes(data);
+        } catch (error) {
+            Alert.alert("Error", "No se pudo obtener los eventos del mes");
+            console.error("Error fetching eventos del mes:", error);
+        }
+    };
+
+    const fetchEventosDelDia = async () => {
+        try {
+            console.log(new Date().toISOString().split("T")[0]+"");
+            const response = await fetch("http://127.0.0.1:8000/api/eventos_hoy/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ fecha: new Date().toISOString().split("T")[0] }), // Envía la fecha actual
+            });
+            const data = await response.json();
+            console.log(data);
+            setEventosDelDia(data);
+        } catch (error) {
+            Alert.alert("Error", "No se pudo obtener los eventos del día");
+            console.error("Error fetching eventos del día:", error);
+        }
+    };
+
 
     const handleSubmitSearch = () => {
         console.log("buscando " + search);
@@ -137,8 +228,57 @@ const inicio = () => {
             <Text
                 style={[styles.textoTitulo, {marginTop: "5%"}]}
             >
-                Eventos populares
+                Eventos hoy
             </Text>
+            <View style={{ marginLeft: "2%", marginTop:"3%" }}>
+                {eventosDelDia.map((evento) => (
+                    <Link
+                        href={("/events/" + evento.id_evento) as Href}
+                        key={evento.id_evento}
+                        style={{ marginLeft: "3%" }}
+                    >
+                        <ImageBackground
+                            resizeMode="cover"
+                            source={evento.banner}
+                            style={{
+                                width: 150,
+                                height: 200,
+                                borderRadius: 10,
+                                overflow: "hidden",
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: "flex-end",
+                                    alignItems: "center",
+                                    padding: 5,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        fontFamily: "Poppins-Regular",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {evento.nombre}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    <FontAwesome name="clock-o" color={"yellow"} />
+                                    {evento.horario_fin}
+                                </Text>
+                            </View>
+                        </ImageBackground>
+                    </Link>
+                ))}
+            </View>
+            
             <Text
                 style={[styles.textoTitulo,{marginTop:"5%"}]}
             >
@@ -192,6 +332,61 @@ const inicio = () => {
                     </Link>
                 ))}
             </View>
+
+            <Text
+                style={[styles.textoTitulo, {marginTop: "5%"}]}
+            >
+                Eventos populares
+            </Text>
+            <View style={{ marginLeft: "2%", marginTop:"3%" }}>
+                {eventosDelMes.map((evento) => (
+                    <Link
+                        href={("/events/" + evento.id_evento) as Href}
+                        key={evento.id_evento}
+                        style={{ marginLeft: "3%" }}
+                    >
+                        <ImageBackground
+                            resizeMode="cover"
+                            source={evento.banner}
+                            style={{
+                                width: 150,
+                                height: 200,
+                                borderRadius: 10,
+                                overflow: "hidden",
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: "flex-end",
+                                    alignItems: "center",
+                                    padding: 5,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        fontFamily: "Poppins-Regular",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {evento.nombre}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    <FontAwesome name="clock-o" color={"yellow"} />
+                                    {evento.horario_fin}
+                                </Text>
+                            </View>
+                        </ImageBackground>
+                    </Link>
+                ))}
+            </View>
+
         </View>
     );
 };
