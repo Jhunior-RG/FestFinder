@@ -3,6 +3,7 @@ import Styles from "@/globalStyles/styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { router, type Href } from "expo-router";
 import moment from "moment";
+import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import {
     FlatList,
@@ -57,7 +58,7 @@ const MyPlace = () => {
     const [etiquetas, setEtiquetas] = useState<String[]>([]);
     const [horarioOpened, setHorarioOpened] = useState(false);
     const [eventos, setEventos] = useState<Evento[]>([]);
-    const [fotos, setFotos] = useState([]);
+    const [fotos, setFotos] = useState<any[]>([]);
 
     useEffect(() => {
         const eventos = [
@@ -128,7 +129,6 @@ const MyPlace = () => {
 
         const isOpenToday = () => {
             const today = getDay(new Date());
-            console.log(horarioAtencion);
             const atencionToday = horarioAtencion.filter(
                 (horario) => horario.dia === today
             )[0];
@@ -164,12 +164,41 @@ const MyPlace = () => {
         setFotos(fotos);
     }, []);
 
+    const guardarImagen = (imagen:ImagePicker.ImagePickerAsset)=>{
+        //guardar en el servidor
+        const formData = new FormData();
+        formData.append("image", {
+            uri: imagen.uri,
+            type: imagen.type,
+            name: "image.jpg",
+        }as any);
+        //llamar al api para guardar la imagen
+
+        console.log('guardando imagen en el servidor')
+    }
+
     const getDay = (date: Date) => {
         const day = date.getDay();
         return day === 0 ? 6 : day - 1;
     };
+
+    const pickImage = async (setImage: any, aspect: [number, number]) => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: aspect,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            guardarImagen(result.assets[0]);
+            setImage(result.assets[0]);
+        }
+    };
     const handleFoto = ()=> {
-        console.log('agregando fot')
+        pickImage((foto:ImagePicker.ImagePickerAsset)=>{
+            setFotos([foto,...fotos])
+        }, [16, 9]);
     }
 
     return (
@@ -518,7 +547,7 @@ const MyPlace = () => {
                                             borderRadius: 10,
                                             marginTop: "2%",
                                             height: 150,
-                                            width: 200,
+                                            aspectRatio: "16/9",
                                             alignItems: "center",
                                             justifyContent: "center",
                                             backgroundColor: "gray",
