@@ -48,6 +48,13 @@ const profile = () => {
                     icon="clock-o"
                     textColor="#787878"
                 />
+                <ItemProfile
+                    onPress={() => {router.push('/places/myplace') }}
+                    color="#7D5683"
+                    text="Administrar mi local"
+                    icon="gear"
+                    textColor="#787878"
+                />
             </View>
 
             <Text style={styles.textoSubtitulo}>Configuracion</Text>

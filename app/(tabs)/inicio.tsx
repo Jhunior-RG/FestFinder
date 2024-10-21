@@ -12,6 +12,7 @@ import {
     View,
 } from "react-native";
 import { red } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import Notch from "@/components/Notch";
 
 interface Place {
     id: number;
@@ -70,7 +71,7 @@ const inicio = () => {
             console.log(data);
             setPopularPlaces(data);
         } catch (error) {
-            Alert.alert("Error", "No se pudo obtener los establecimientos");
+            //Alert.alert("Error", "No se pudo obtener los establecimientos");
             console.error("Error fetching establecimientos:", error);
         }
     };
@@ -87,7 +88,7 @@ const inicio = () => {
             console.log(data);
             setTags(data);
         } catch (error) {
-            Alert.alert("Error", "No se pudo obtener los establecimientos");
+            //Alert.alert("Error", "No se pudo obtener los establecimientos");
             console.error("Error fetching establecimientos:", error);
         }
     };
@@ -107,7 +108,7 @@ const inicio = () => {
             console.log(data);
             setEventosDelMes(data);
         } catch (error) {
-            Alert.alert("Error", "No se pudo obtener los eventos del mes");
+            //Alert.alert("Error", "No se pudo obtener los eventos del mes");
             console.error("Error fetching eventos del mes:", error);
         }
     };
@@ -126,7 +127,7 @@ const inicio = () => {
             console.log(data);
             setEventosDelDia(data);
         } catch (error) {
-            Alert.alert("Error", "No se pudo obtener los eventos del día");
+            //Alert.alert("Error", "No se pudo obtener los eventos del día");
             console.error("Error fetching eventos del día:", error);
         }
     };
@@ -147,9 +148,7 @@ const inicio = () => {
     return (
         <View>
             {/* Notch*/}
-            <View
-                style={{ backgroundColor: "#402158", paddingVertical: 20 }}
-            ></View>
+            <Notch/>
             <View
                 style={{
                     backgroundColor: "#402158",
