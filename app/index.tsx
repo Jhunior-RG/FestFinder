@@ -44,6 +44,12 @@ const Index = () => {
                     >
                         <Text style={Styles.buttonText}>Registrarse</Text>
                     </Pressable>
+                    <Pressable
+                        style={Styles.button}
+                        onPress={() => router.navigate("/inicio")}
+                    >
+                        <Text style={Styles.buttonText}>Ir a la pagina principal</Text>
+                    </Pressable>
                 </>
             )}
         </View>

@@ -37,6 +37,8 @@ const inicio = () => {
     const [search, setSearch] = useState("");
     const [eventosDelMes, setEventosDelMes] = useState<Evento[]>([]);
     const [eventosDelDia, setEventosDelDia] = useState<Evento[]>([]);
+    const API_URL = process.env.EXPO_PUBLIC_API_URL
+    
 
     useEffect(() => {
         const places = [
@@ -61,7 +63,7 @@ const inicio = () => {
 
     const fetchEstablecimientos = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/establecimientos/", {
+            const response = await fetch(`${API_URL}/api/establecimientos/`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -78,7 +80,23 @@ const inicio = () => {
 
     const fetchCategoriasEstablecimientos = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/categorias-establecimientos/", {
+            const response = await fetch(`${API_URL}/api/categorias-establecimientos/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            console.log(data);
+            setTags(data);
+        } catch (error) {
+            //Alert.alert("Error", "No se pudo obtener los establecimientos");
+            console.error("Error fetching establecimientos:", error);
+        }
+    };
+    const fetchGeneroEvento = async () => {
+        try {
+            const response = await fetch(`${API_URL}/api/generos-evento/`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -97,7 +115,7 @@ const inicio = () => {
         try {
             console.log(new Date().toISOString().split("T")[0]+"");
 
-            const response = await fetch("http://127.0.0.1:8000/api/eventos_mes/", {
+            const response = await fetch(`${API_URL}/api/eventos_mes/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -116,7 +134,7 @@ const inicio = () => {
     const fetchEventosDelDia = async () => {
         try {
             console.log(new Date().toISOString().split("T")[0]+"");
-            const response = await fetch("http://127.0.0.1:8000/api/eventos_hoy/", {
+            const response = await fetch(`${API_URL}/api/eventos_hoy/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
