@@ -250,7 +250,7 @@ const inicio = () => {
             <View style={{ marginLeft: "2%", marginTop:"3%" }}>
                 {eventosDelDia.map((evento) => (
                     <Link
-                        href={("/events/" + evento.id_evento) as Href}
+                        href={("/eventos/" + evento.id_evento) as Href}
                         key={evento.id_evento}
                         style={{ marginLeft: "3%" }}
                     >
@@ -358,7 +358,7 @@ const inicio = () => {
             <View style={{ marginLeft: "2%", marginTop:"3%" }}>
                 {eventosDelMes.map((evento) => (
                     <Link
-                        href={("/events/" + evento.id_evento) as Href}
+                        href={("/eventos/" + evento.id_evento) as Href}
                         key={evento.id_evento}
                         style={{ marginLeft: "3%" }}
                     >
