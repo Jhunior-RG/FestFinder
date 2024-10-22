@@ -25,7 +25,7 @@ interface Place {
 interface Evento {
     id_evento: number;
     nombre: string;
-    banner: any;
+    logo: any;
     fecha_final: any;
     horario_fin: any;
 }
@@ -256,7 +256,7 @@ const inicio = () => {
                     >
                         <ImageBackground
                             resizeMode="cover"
-                            source={evento.banner}
+                            source={{ uri: `${API_URL}${evento.logo}` }}
                             style={{
                                 width: 150,
                                 height: 200,
@@ -364,7 +364,7 @@ const inicio = () => {
                     >
                         <ImageBackground
                             resizeMode="cover"
-                            source={evento.banner}
+                            source={{ uri: `${API_URL}${evento.logo}` }}
                             style={{
                                 width: 150,
                                 height: 200,
