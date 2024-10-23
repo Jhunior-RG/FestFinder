@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, router, type Href } from "expo-router";
 import Styles from "@/globalStyles/styles";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet } from "react-native";
 import {
     FlatList,
     ImageBackground,
@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { red } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 import Notch from "@/components/Notch";
+import { FadeIn } from "react-native-reanimated";
 
 interface Place {
     id: number;
@@ -37,8 +38,7 @@ const inicio = () => {
     const [search, setSearch] = useState("");
     const [eventosDelMes, setEventosDelMes] = useState<Evento[]>([]);
     const [eventosDelDia, setEventosDelDia] = useState<Evento[]>([]);
-    const API_URL = process.env.EXPO_PUBLIC_API_URL
-    
+    const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
     useEffect(() => {
         const places = [
@@ -60,7 +60,6 @@ const inicio = () => {
         //fetchCategoriasEstablecimientos();
     }, []);
 
-
     const fetchEstablecimientos = async () => {
         try {
             const response = await fetch(`${API_URL}/api/establecimientos/`, {
@@ -80,12 +79,15 @@ const inicio = () => {
 
     const fetchCategoriasEstablecimientos = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/categorias-establecimientos/`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            const response = await fetch(
+                `${API_URL}/api/categorias-establecimientos/`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
             const data = await response.json();
             console.log(data);
             setTags(data);
@@ -110,17 +112,19 @@ const inicio = () => {
             console.error("Error fetching establecimientos:", error);
         }
     };
-    
+
     const fetchEventosDelMes = async () => {
         try {
-            console.log(new Date().toISOString().split("T")[0]+"");
+            console.log(new Date().toISOString().split("T")[0] + "");
 
             const response = await fetch(`${API_URL}/api/eventos_mes/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ fecha: new Date().toISOString().split("T")[0] }), // Envía la fecha actual
+                body: JSON.stringify({
+                    fecha: new Date().toISOString().split("T")[0],
+                }), // Envía la fecha actual
             });
             const data = await response.json();
             console.log(data);
@@ -133,13 +137,15 @@ const inicio = () => {
 
     const fetchEventosDelDia = async () => {
         try {
-            console.log(new Date().toISOString().split("T")[0]+"");
+            console.log(new Date().toISOString().split("T")[0] + "");
             const response = await fetch(`${API_URL}/api/eventos_hoy/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ fecha: new Date().toISOString().split("T")[0] }), // Envía la fecha actual
+                body: JSON.stringify({
+                    fecha: new Date().toISOString().split("T")[0],
+                }), // Envía la fecha actual
             });
             const data = await response.json();
             console.log(data);
@@ -150,23 +156,22 @@ const inicio = () => {
         }
     };
 
-
     const handleSubmitSearch = () => {
         console.log("buscando " + search);
         setOpenSearch(false);
     };
-    
-    const searchPress = ()=> {
-        if(openSearch) {
-            handleSubmitSearch()
+
+    const searchPress = () => {
+        if (openSearch) {
+            handleSubmitSearch();
         }
-        setOpenSearch(!openSearch)
-    }
+        setOpenSearch(!openSearch);
+    };
 
     return (
-        <View>
+        <ScrollView>
             {/* Notch*/}
-            <Notch/>
+            <Notch />
             <View
                 style={{
                     backgroundColor: "#402158",
@@ -178,10 +183,15 @@ const inicio = () => {
                     shadowColor: "#000",
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.3,
-                    bottom:5,
+                    bottom: 5,
                 }}
             >
-                <FontAwesome style = {{marginLeft:"7%"}}name="bell" size={23} color={"white"} />
+                <FontAwesome
+                    style={{ marginLeft: "7%" }}
+                    name="bell"
+                    size={23}
+                    color={"white"}
+                />
                 {openSearch ? (
                     <TextInput
                         placeholder="Buscar"
@@ -205,14 +215,19 @@ const inicio = () => {
                 )}
 
                 <Pressable onPress={searchPress}>
-                    <FontAwesome name="search" size={23} color={"white"} style={{marginRight:"7%"}} />
+                    <FontAwesome
+                        name="search"
+                        size={23}
+                        color={"white"}
+                        style={{ marginRight: "7%" }}
+                    />
                 </Pressable>
             </View>
 
             <Text style={styles.textoTitulo}>Categorias</Text>
             <FlatList
                 data={tags}
-                style = {styles.slider}
+                style={styles.slider}
                 keyExtractor={(item) => item.toString()}
                 renderItem={({ item }) => (
                     <Pressable
@@ -231,8 +246,8 @@ const inicio = () => {
                                 borderColor: "#956ca3",
                                 color: "#956ca3",
                                 paddingHorizontal: 10,
-                                paddingVertical: 4,  
-                                lineHeight: 24,      
+                                paddingVertical: 4,
+                                lineHeight: 24,
                             }}
                         >
                             {item}
@@ -242,21 +257,22 @@ const inicio = () => {
                 horizontal
             />
 
-            <Text
-                style={[styles.textoTitulo, {marginTop: "5%"}]}
-            >
+            <Text style={[styles.textoTitulo, { marginTop: "5%" }]}>
                 Eventos hoy
             </Text>
-            <View style={{ marginLeft: "2%", marginTop:"3%" }}>
-                {eventosDelDia.map((evento) => (
+
+            <FlatList
+                data={eventosDelDia}
+                style={styles.slider}
+                keyExtractor={(item) => JSON.stringify(item)}
+                renderItem={({ item }) => (
                     <Link
-                        href={("/eventos/" + evento.id_evento) as Href}
-                        key={evento.id_evento}
+                        href={("/eventos/" + item.id_evento) as Href}
                         style={{ marginLeft: "3%" }}
                     >
                         <ImageBackground
                             resizeMode="cover"
-                            source={{ uri: `${API_URL}${evento.logo}` }}
+                            source={{ uri: `${API_URL}${item.logo}` }}
                             style={{
                                 width: 150,
                                 height: 200,
@@ -279,7 +295,7 @@ const inicio = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                                    {evento.nombre}
+                                    {item.nombre}
                                 </Text>
                                 <Text
                                     style={{
@@ -287,30 +303,35 @@ const inicio = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                                    <FontAwesome name="clock-o" color={"yellow"} />
-                                    {evento.horario_fin}
+                                    <FontAwesome
+                                        name="clock-o"
+                                        color={"yellow"}
+                                    />
+                                    {item.horario_fin}
                                 </Text>
                             </View>
                         </ImageBackground>
                     </Link>
-                ))}
-            </View>
-            
-            <Text
-                style={[styles.textoTitulo,{marginTop:"5%"}]}
-            >
+                )}
+                horizontal
+            />
+
+            <Text style={[styles.textoTitulo, { marginTop: "5%" }]}>
                 Lugares populares
             </Text>
-            <View style={{ marginLeft: "2%", marginTop:"3%" }}>
-                {popularPlaces.map((place) => (
+            <FlatList
+                data={popularPlaces}
+                style={styles.slider}
+                keyExtractor={(item) => JSON.stringify(item)}
+                renderItem={({ item }) => (
                     <Link
-                        href={("/places/" + place.id) as Href}
-                        key={place.id}
+                        href={("/places/" + item.id) as Href}
+
                         style={{ marginLeft: "3%" }}
                     >
                         <ImageBackground
                             resizeMode="cover"
-                            source={place.uri}
+                            source={item.uri}
                             style={{
                                 width: 150,
                                 height: 200,
@@ -333,7 +354,7 @@ const inicio = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                                    {place.name}
+                                    {item.name}
                                 </Text>
                                 <Text
                                     style={{
@@ -342,29 +363,31 @@ const inicio = () => {
                                     }}
                                 >
                                     <FontAwesome name="star" color={"yellow"} />
-                                    {place.score} / 10
+                                    {item.score} / 10
                                 </Text>
                             </View>
                         </ImageBackground>
                     </Link>
-                ))}
-            </View>
+                )}
+                horizontal
+            />
 
-            <Text
-                style={[styles.textoTitulo, {marginTop: "5%"}]}
-            >
+            <Text style={[styles.textoTitulo, { marginTop: "5%" }]}>
                 Eventos populares
             </Text>
-            <View style={{ marginLeft: "2%", marginTop:"3%" }}>
-                {eventosDelMes.map((evento) => (
+            <FlatList
+                data={eventosDelMes}
+                style={styles.slider}
+                keyExtractor={(item) => JSON.stringify(item)}
+                renderItem={({ item, index }) => (
                     <Link
-                        href={("/eventos/" + evento.id_evento) as Href}
-                        key={evento.id_evento}
+                        href={("/eventos/" + item.id_evento) as Href}
+                        key={index}
                         style={{ marginLeft: "3%" }}
                     >
                         <ImageBackground
                             resizeMode="cover"
-                            source={{ uri: `${API_URL}${evento.logo}` }}
+                            source={{ uri: `${API_URL}${item.logo}` }}
                             style={{
                                 width: 150,
                                 height: 200,
@@ -387,7 +410,7 @@ const inicio = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                                    {evento.nombre}
+                                    {item.nombre}
                                 </Text>
                                 <Text
                                     style={{
@@ -395,16 +418,19 @@ const inicio = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                                    <FontAwesome name="clock-o" color={"yellow"} />
-                                    {evento.horario_fin}
+                                    <FontAwesome
+                                        name="clock-o"
+                                        color={"yellow"}
+                                    />
+                                    {item.horario_fin}
                                 </Text>
                             </View>
                         </ImageBackground>
                     </Link>
-                ))}
-            </View>
-
-        </View>
+                )}
+                horizontal
+            />
+        </ScrollView>
     );
 };
 
@@ -414,10 +440,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginLeft: "3%",
     },
-    slider:{
+    slider: {
         marginLeft: "5%",
         marginTop: "3%",
     },
-})
+});
 
 export default inicio;
