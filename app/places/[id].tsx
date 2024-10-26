@@ -20,27 +20,23 @@ import {
 } from "react-native";
 
 type Establecimiento = {
+    id: number;
     nombre: string;
-    direccion: string;
-    descripcion: string;
-    tipo: string;
-    nro_ref: string;
-    banner: any;
-    logo: any;
+    direccion?: string;
+    descripcion?: string;
+    nombre_tipo?: string;
+    nro_ref?: string;
+    banner?: any;
+    logo?: any;
+    puntuacion?: number;
 };
 
 type Evento = {
-    id: number;
+    id_evento: number;
     nombre: string;
-    fecha: Date;
-    hora?: string;
-    image: any;
-};
-type Lugar = {
-    id: number;
-    nombre: string;
-    valoracion: number;
-    image: any;
+    fecha_inicio: Date;
+    horario_inicio?: string;
+    logo: any;
 };
 
 type Params = {
@@ -48,15 +44,15 @@ type Params = {
 };
 
 interface Horario {
-    desde: string;
-    hasta: string;
+    inicio_atencion: string;
+    fin_atencion: string;
 }
-interface HorarioAtencion {
+export interface HorarioAtencion {
     dia: number;
     horario: Horario | null;
 }
 
-const days = [
+export const days = [
     "Lunes",
     "Martes",
     "Miercoles",
@@ -70,10 +66,9 @@ const Place = () => {
     const [establecimiento, setEstablecimiento] =
         useState<Establecimiento | null>(null);
     const [etiquetas, setEtiquetas] = useState<string[]>([]);
-    const [valoracion, setValoracion] = useState<number | null>(null);
     const [proximosEventos, setProximosEventos] = useState<Evento[]>([]);
     const [fotos, setFotos] = useState<any[]>([]);
-    const [lugaresParecidos, setLugaresParecidos] = useState<Lugar[]>([]);
+    const [lugaresParecidos, setLugaresParecidos] = useState<Establecimiento[]>([]);
     const [horarioAtencion, setHorarioAtencion] = useState<HorarioAtencion[]>(
         []
     );
@@ -82,6 +77,7 @@ const Place = () => {
         useState<Boolean>(false);
 
     const params = useLocalSearchParams();
+
     const [fontsLoaded] = useFonts({
         "Poppins-Regular": require("../../assets/fonts/Poppins-Regular.ttf"),
         "Poppins-Bold": require("../../assets/fonts/Poppins-Bold.ttf"),
@@ -101,6 +97,7 @@ const Place = () => {
     }, [fontsLoaded]);
 
     useEffect(() => {
+        
         if (fontsLoaded) {
             SplashScreen.hideAsync();
         }
@@ -112,13 +109,15 @@ const Place = () => {
 
         // Simulación de llamada a API para el establecimiento
         const establecimiento = {
+            id: 1,
             nombre: "Alice Park",
             direccion: "Av Melchor Urquidi S/N, Cochabamba",
             descripcion: "",
             banner: require("../../assets/images/alice-park.png"),
             logo: require("../../assets/images/alice-park.png"),
-            tipo: "Discoteca",
+            nombre_tipo: "Discoteca",
             nro_ref: "70711360",
+            puntuacion: 9.2
         };
 
         // Simulación de llamada a API para etiquetas
@@ -130,21 +129,32 @@ const Place = () => {
         ];
 
         // Simulación de llamada a API para valoraciones
-        const valoracion = 9.2;
 
         // Simulación de llamada a API para próximos eventos
         const proximosEventos = [
             {
-                id: 2,
+                id_evento: 2,
                 nombre: "Alice Park-Noche de colores",
-                fecha: new Date("2024-09-02"),
-                image: require("../../assets/images/alice-park-event-1.png"),
+                fecha_inicio: new Date("2024-09-02"),
+                logo: require("../../assets/images/alice-park-event-1.png"),
             },
             {
-                id: 3,
+                id_evento: 3,
                 nombre: "Alice Park - Neon Party",
-                fecha: new Date("2024-09-07"),
-                image: require("../../assets/images/alice-park-event-2.png"),
+                fecha_inicio: new Date("2024-09-07"),
+                logo: require("../../assets/images/alice-park-event-2.png"),
+            },
+            {
+                id_evento: 4,
+                nombre: "Alice Park-Noche de colores",
+                fecha_inicio: new Date("2024-09-02"),
+                logo: require("../../assets/images/alice-park-event-1.png"),
+            },
+            {
+                id_evento: 5,
+                nombre: "Alice Park - Neon Party",
+                fecha_inicio: new Date("2024-09-07"),
+                logo: require("../../assets/images/alice-park-event-2.png"),
             },
         ];
 
@@ -158,26 +168,26 @@ const Place = () => {
             {
                 id: 10,
                 nombre: "Mandarina",
-                valoracion: 8,
-                image: require("../../assets/images/lugar-1.png"),
+                puntuacion: 8,
+                logo: require("../../assets/images/lugar-1.png"),
             },
             {
                 id: 11,
                 nombre: "Noma",
-                valoracion: 9,
-                image: require("../../assets/images/lugar-2.png"),
+                puntuacion: 9,
+                logo: require("../../assets/images/lugar-2.png"),
             },
             {
                 id: 12,
                 nombre: "Euphoria",
-                valoracion: 9,
-                image: require("../../assets/images/lugar-3.png"),
+                puntuacion: 9,
+                logo: require("../../assets/images/lugar-3.png"),
             },
             {
                 id: 13,
                 nombre: "Mamba",
-                valoracion: 9,
-                image: require("../../assets/images/lugar-4.png"),
+                puntuacion: 9,
+                logo: require("../../assets/images/lugar-4.png"),
             },
         ];
 
@@ -185,8 +195,8 @@ const Place = () => {
             {
                 dia: 0,
                 horario: {
-                    desde: "09:00",
-                    hasta: "01:00",
+                    inicio_atencion: "09:00",
+                    fin_atencion: "01:00",
                 },
             },
             {
@@ -208,15 +218,15 @@ const Place = () => {
             {
                 dia: 5,
                 horario: {
-                    desde: "19:00",
-                    hasta: "01:00",
+                    inicio_atencion: "19:00",
+                    fin_atencion: "01:00",
                 },
             },
             {
                 dia: 6,
                 horario: {
-                    desde: "19:00",
-                    hasta: "01:00",
+                    inicio_atencion: "19:00",
+                    fin_atencion: "01:00",
                 },
             },
         ];
@@ -230,26 +240,25 @@ const Place = () => {
 
             if (!horarioToday) return false;
 
-            const desde = moment(horarioToday.desde, "HH:mm");
-            const hasta = moment(horarioToday.hasta, "HH:mm");
+            const inicio_atencion = moment(horarioToday.inicio_atencion, "HH:mm");
+            const fin_atencion = moment(horarioToday.fin_atencion, "HH:mm");
             const current = moment();
 
-            if (hasta.isBefore(desde)) {
-                // Verificar si está entre 'desde' y medianoche o entre medianoche y 'hasta'
+            if (fin_atencion.isBefore(inicio_atencion)) {
+                // Verificar si está entre 'inicio_atencion' y medianoche o entre medianoche y 'fin_atencion'
                 return (
-                    current.isBetween(desde, moment("23:59:59", "HH:mm")) ||
-                    current.isBetween(moment("00:00", "HH:mm"), hasta)
+                    current.isBetween(inicio_atencion, moment("23:59:59", "HH:mm")) ||
+                    current.isBetween(moment("00:00", "HH:mm"), fin_atencion)
                 );
             }
 
             // Si no cruza medianoche, comprobar de forma estándar
-            return current.isBetween(desde, hasta);
+            return current.isBetween(inicio_atencion, fin_atencion);
         };
 
         // Establecer los estados
         setEstablecimiento(establecimiento);
         setEtiquetas(etiquetas);
-        setValoracion(valoracion);
         setProximosEventos(proximosEventos);
         setFotos(fotos);
         setLugaresParecidos(lugaresParecidos);
@@ -316,9 +325,9 @@ const Place = () => {
 
                                 <Text>
                                     {horario.horario
-                                        ? horario.horario.desde +
+                                        ? horario.horario.inicio_atencion +
                                           " / " +
-                                          horario.horario.hasta
+                                          horario.horario.fin_atencion
                                         : "Cerrado"}
                                 </Text>
                             </View>
@@ -390,7 +399,7 @@ const Place = () => {
                                     styles.tipoLocal,
                                 ]}
                             >
-                                {establecimiento.tipo}
+                                {establecimiento.nombre_tipo}
                             </Text>
                         </View>
                         <View style={{ top: "-20%", right: "40%" }}>
@@ -502,7 +511,7 @@ const Place = () => {
                                         name="star"
                                         color={"orange"}
                                     />{" "}
-                                    {valoracion} / 10
+                                    {establecimiento.puntuacion} / 10
                                 </Text>
                                 <TextInput
                                     style={{
@@ -548,12 +557,14 @@ const Place = () => {
                     >
                         Eventos próximos
                     </Text>
-                    <View style={{ flexDirection: "row", marginLeft: "3%" }}>
-                        {proximosEventos.map((evento) => (
+                    <FlatList
+                        style={{ marginLeft: "3%" }}
+                        data={proximosEventos}
+                        renderItem={({ item }) => (
                             <Pressable
                                 onPress={() => {
                                     router.navigate(
-                                        ("/eventos/" + evento.id) as Href
+                                        ("/eventos/" + item.id_evento) as Href
                                     );
                                 }}
                                 style={{
@@ -562,10 +573,10 @@ const Place = () => {
                                     borderRadius: 150,
                                     marginTop: "2%",
                                 }}
-                                key={evento.id}
+                                key={item.id_evento}
                             >
                                 <ImageBackground
-                                    source={evento.image}
+                                    source={item.logo}
                                     style={{
                                         height: 200,
                                         width: 150,
@@ -590,10 +601,10 @@ const Place = () => {
                                                 fontWeight: "bold",
                                             }}
                                         >
-                                            {evento.fecha.getDate()}
+                                            {item.fecha_inicio.getDate()}
                                         </Text>
                                         <Text style={{ fontSize: 12 }}>
-                                            {evento.fecha.toLocaleString(
+                                            {item.fecha_inicio.toLocaleString(
                                                 "es-ES",
                                                 { month: "short" }
                                             )}
@@ -601,11 +612,14 @@ const Place = () => {
                                     </View>
                                 </ImageBackground>
                                 <Text style={{ fontFamily: "Poppins-Regular" }}>
-                                    {evento.nombre}
+                                    {item.nombre}
                                 </Text>
                             </Pressable>
-                        ))}
-                    </View>
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                        horizontal
+                    />
+                    
                     <View
                         style={{
                             flexDirection: "row",
@@ -697,7 +711,7 @@ const Place = () => {
                                 }}
                             >
                                 <Image
-                                    source={item.image}
+                                    source={item.logo}
                                     style={{
                                         width: 100,
                                         height: 100,
@@ -726,7 +740,7 @@ const Place = () => {
                                             fontFamily: "Poppins-SemiBold",
                                         }}
                                     >
-                                        {item.valoracion}/10
+                                        {item.puntuacion}/10
                                     </Text>
                                 </View>
                             </Pressable>

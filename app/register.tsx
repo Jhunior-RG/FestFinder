@@ -3,6 +3,7 @@ import Styles from "../globalStyles/styles";
 import { Link } from "@react-navigation/native";
 import { useState } from "react";
 import LoginGoogle from "@/components/LoginGoogle";
+import { API_URL } from "@/constants/Url";
 
 const Register = () => {
     const [nombre, setName] = useState("");
@@ -22,8 +23,6 @@ const Register = () => {
         }
         // send to the server
         const data = { nombre, email, telefono, p_field, imagen:1};
-
-        const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
         try {
             const response = await fetch(API_URL + "/api/usuario/", {

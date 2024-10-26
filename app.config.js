@@ -8,7 +8,7 @@ export default {
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/festLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

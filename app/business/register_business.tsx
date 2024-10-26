@@ -12,12 +12,14 @@ import {
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 const register_business = () => {
-    const [name, setName] = useState("");
-    const [location, setLocation] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [selectedBusiness, setSelectedBusiness] = useState("");
-    const [rango, setRango] = useState("");
+    const [nombre, setName] = useState("");
+    const [direccion, setLocation] = useState("");
+    const [em_ref, setEmail] = useState("");
+    const [nro_ref, setPhone] = useState("");
+    const [tipo_fk, setSelectedBusiness] = useState("");
+    const [rango_de_precios, setRango] = useState("");
+    const [coordenada_x, setCoordenadaX] = useState("");
+    const [coordenada_y, setCoordenadaY] = useState("");
 
     const dataRango = ["Bajo", "Medio", "Alto"];
 
@@ -29,12 +31,12 @@ const register_business = () => {
 
     const handleNext = () => {
         const dataBusiness = [
-            name,
-            location,
-            phone,
-            email,
-            selectedBusiness,
-            rango,
+            nombre,
+            direccion,
+            nro_ref,
+            em_ref,
+            tipo_fk,
+            rango_de_precios,
         ];
         if (dataBusiness.includes("")) {
             console.log("todos los campos son obligatorios");
@@ -42,7 +44,7 @@ const register_business = () => {
         }
         router.push({
             pathname: "/business/preview",
-            params: { name, location, email, selectedBusiness, rango },
+            params: { nombre, direccion, em_ref, tipo_fk, rango_de_precios,coordenada_x,coordenada_y}
         });
     };
     return (
@@ -55,7 +57,7 @@ const register_business = () => {
                     zIndex: 1,
                 }}
             >
-                <FontAwesome name="arrow-left" size={25} />
+                <FontAwesome nombre="arrow-left" size={25} />
             </Pressable>
             <View
                 style={{
@@ -111,13 +113,13 @@ const register_business = () => {
                             paddingBottom: 2,
                         }}
                     >
-                        {location ? location : "Seleccionar ubicación"}
+                        {direccion ? direccion : "Seleccionar ubicación"}
                     </Text>
                 </Pressable>
                 <SelectList
                     setSelected={setSelectedBusiness}
                     data={dataTypesBusiness}
-                    save="value"
+                    save="key"
                     searchPlaceholder="Buscar"
                     placeholder="Tipo de negocio"
                     boxStyles={Styles.input}
@@ -144,14 +146,14 @@ const register_business = () => {
                                 setRango(value);
                             }}
                             style={
-                                value === rango
+                                value === rango_de_precios
                                     ? styles.buttonSelected
                                     : styles.button
                             }
                         >
                             <Text
                                 style={
-                                    value === rango
+                                    value === rango_de_precios
                                         ? styles.textSelected
                                         : styles.text
                                 }
@@ -160,7 +162,7 @@ const register_business = () => {
                             </Text>
                             <Text
                                 style={
-                                    value === rango
+                                    value === rango_de_precios
                                         ? styles.textSelected
                                         : styles.text
                                 }

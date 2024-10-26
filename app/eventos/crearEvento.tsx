@@ -1,95 +1,52 @@
-import Notch from "@/components/Notch";
 import {
-    Button,
-    Image,
     ImageBackground,
     Pressable,
     Text,
     TextInput,
     View,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import Styles from "@/globalStyles/styles";
+
 import { useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Header from "@/components/Header";
-import DateTimePicker, {
-    DateTimePickerAndroid,
-    type DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+
+import { pickImage } from "@/utils/Image";
+import type { ImagePickerAsset } from "expo-image-picker";
+import {
+    dateToDDMMYYYY,
+    dateToHHmm,
+    showSingleDate,
+    showSingleTime,
+} from "@/utils/DateTime";
+
+const imagen_defecto = require("../../assets/images/default_image.png");
 
 const CrearEvento = () => {
     const [nombre, setNombre] = useState("");
-    const [imagenEvento, setImagenEvento] =
-        useState<ImagePicker.ImagePickerAsset>();
-    const [horaInicio, setHoraInicio] = useState<Date>(new Date());
-    const [horaFin, setHoraFin] = useState<Date>(new Date());
+    const [logo, setImagenEvento] = useState<ImagePickerAsset>();
+    const [horario_inicio, setHoraInicio] = useState<Date>(new Date());
+    const [horario_fin, setHoraFin] = useState<Date>(new Date());
     const [descripcion, setDescripcion] = useState("");
-    const [precioInicial, setPrecioInicial] = useState('0');
-    const [precioFinal, setPrecioFinal] = useState('0');
-    const [ubicacion, setUbicacion] = useState('');
+    const [precioInicial, setPrecioInicial] = useState("0");
+    const [precioFinal, setPrecioFinal] = useState("0");
+    const [ubicacion, setUbicacion] = useState("");
     const [error, setError] = useState("");
 
-    const pickImage = async (setImage: any, aspect: [number, number]) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: aspect,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setImage(result.assets[0]);
-        }
-    };
-
-    const onChange = (selectedDate: Date, mode: String) => {
-        if (mode === "horaInicio") {
-            setHoraInicio(selectedDate);
-        } else if (mode === "horaFin") {
-            setHoraFin(selectedDate);
-        }
-    };
-
-    const showMode = (currentMode: "date" | "time", modeToSet: String) => {
-        DateTimePickerAndroid.open({
-            value: modeToSet === "horaInicio" ? horaInicio : horaFin,
-            onChange: (event, selectedDate: Date | undefined) =>
-                selectedDate !== undefined &&
-                onChange(selectedDate, modeToSet as String),
-            mode: currentMode,
-            is24Hour: true,
-        });
-    };
-
-    const handleSubmit = () => {
-        if (imagenEvento === undefined) {
+    const handleSubmit = async () => {
+        if (logo === undefined) {
             setError("Seleccione una imagen");
             return;
         }
         const formData = new FormData();
-        formData.append("file", {
-            uri: imagenEvento?.uri,
-            type: imagenEvento?.mimeType,
-            name: imagenEvento?.fileName,
-        } as any);
+        if (logo?.uri) {
+            const logoBlob = await fetch(logo.uri).then((res) => res.blob());
+            formData.append("logo", logoBlob, "logo.png");
+        }
+
         formData.append("nombre", nombre);
-        formData.append(
-            "fecha",
-            horaInicio.getDate().toLocaleString() +
-                "/" +
-                horaInicio.getMonth() +
-                "/" +
-                horaInicio.getFullYear()
-        );
-        formData.append(
-            "horaInicio",
-            horaInicio.getHours() + ":" + horaInicio.getMinutes()
-        );
-        formData.append(
-            "horaFin",
-            horaFin.getHours() + ":" + horaFin.getMinutes()
-        );
+        formData.append("fecha_inicio", dateToDDMMYYYY(horario_inicio));
+        formData.append("horario_inicio", dateToHHmm(horario_inicio));
+        formData.append("horario_fin", dateToHHmm(horario_fin));
 
         formData.append("descripcion", descripcion);
         formData.append("precioInicial", precioInicial);
@@ -103,7 +60,8 @@ const CrearEvento = () => {
             <Header title="Crear nuevo evento" />
 
             <ImageBackground
-                source={imagenEvento ? { uri: imagenEvento.uri } : undefined}
+                source={logo ? { uri: logo.uri } : imagen_defecto}
+                alt="imagen Evento"
                 style={{
                     backgroundColor: "gray",
                     height: 200,
@@ -134,36 +92,32 @@ const CrearEvento = () => {
             <View style={{ flexDirection: "row" }}>
                 <View>
                     <Text>Fecha</Text>
-                    <Pressable onPress={() => showMode("date", "horaInicio")}>
-                        <Text>
-                            {horaInicio.getDate().toLocaleString() +
-                                "/" +
-                                horaInicio.getMonth() +
-                                "/" +
-                                horaInicio.getFullYear()}
-                        </Text>
+                    <Pressable
+                        onPress={() =>
+                            showSingleDate(horario_inicio, setHoraInicio)
+                        }
+                    >
+                        <Text>{dateToDDMMYYYY(horario_inicio)}</Text>
                     </Pressable>
                 </View>
                 <View>
                     <Text>Hora</Text>
                     <View style={{ flexDirection: "row" }}>
                         <Pressable
-                            onPress={() => showMode("time", "horaInicio")}
+                            onPress={() =>
+                                showSingleTime(horario_inicio, setHoraInicio)
+                            }
                         >
-                            <Text>
-                                {horaInicio.getHours() +
-                                    ":" +
-                                    horaInicio.getMinutes()}
-                            </Text>
+                            <Text>{dateToHHmm(horario_inicio)}</Text>
                         </Pressable>
                         <Text>-</Text>
 
-                        <Pressable onPress={() => showMode("time", "horaFin")}>
-                            <Text>
-                                {horaFin.getHours() +
-                                    ":" +
-                                    horaFin.getMinutes()}
-                            </Text>
+                        <Pressable
+                            onPress={() =>
+                                showSingleTime(horario_fin, setHoraFin)
+                            }
+                        >
+                            <Text>{dateToHHmm(horario_fin)}</Text>
                         </Pressable>
                     </View>
                 </View>

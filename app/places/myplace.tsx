@@ -3,7 +3,6 @@ import Styles from "@/globalStyles/styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { router, type Href } from "expo-router";
 import moment from "moment";
-import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import {
     FlatList,
@@ -16,10 +15,13 @@ import {
     View,
 } from "react-native";
 import { Double } from "react-native/Libraries/Types/CodegenTypes";
+import { pickImage } from "@/utils/Image";
+import type { ImagePickerAsset } from "expo-image-picker";
+const image_default = require("../../assets/images/default_image.png");
 
 interface Horario {
-    desde: string;
-    hasta: string;
+    inicio_atencion: string;
+    fin_atencion: string;
 }
 interface HorarioAtencion {
     dia: number;
@@ -35,12 +37,11 @@ const days = [
     "Domingo",
 ];
 type Evento = {
-    id: number;
+    id_evento: number;
     nombre: string;
-    fecha: Date;
-    hora?: string;
-    image: any;
-    agregarEvento?: boolean;
+    fecha_inicio: Date;
+    horario_inicio?: string;
+    logo: any;
 };
 
 const MyPlace = () => {
@@ -51,7 +52,7 @@ const MyPlace = () => {
     const [tipo, setTipo] = useState<String>();
     const [direccion, setDireccion] = useState<String>();
     const [establecimientoAbierto, setEstablecimientoAbierto] = useState(false);
-    const [valoracion, setValoracion] = useState<Double>();
+    const [puntuacion, setValoracion] = useState<Double>();
     const [horarioAtencion, setHorarioAtencion] = useState<HorarioAtencion[]>(
         []
     );
@@ -63,16 +64,16 @@ const MyPlace = () => {
     useEffect(() => {
         const eventos = [
             {
-                id: 2,
+                id_evento: 2,
                 nombre: "Alice Park-Noche de colores",
-                fecha: new Date("2024-09-02"),
-                image: require("../../assets/images/alice-park-event-1.png"),
+                fecha_inicio: new Date("2024-09-02"),
+                logo: require("../../assets/images/alice-park-event-1.png"),
             },
             {
-                id: 3,
+                id_evento: 3,
                 nombre: "Alice Park - Neon Party",
-                fecha: new Date("2024-09-07"),
-                image: require("../../assets/images/alice-park-event-2.png"),
+                fecha_inicio: new Date("2024-09-07"),
+                logo: require("../../assets/images/alice-park-event-2.png"),
             },
         ];
         const fotos = [
@@ -83,8 +84,8 @@ const MyPlace = () => {
             {
                 dia: 0,
                 horario: {
-                    desde: "09:00",
-                    hasta: "01:00",
+                    inicio_atencion: "09:00",
+                    fin_atencion: "01:00",
                 },
             },
             {
@@ -106,15 +107,15 @@ const MyPlace = () => {
             {
                 dia: 5,
                 horario: {
-                    desde: "19:00",
-                    hasta: "01:00",
+                    inicio_atencion: "19:00",
+                    fin_atencion: "01:00",
                 },
             },
             {
                 dia: 6,
                 horario: {
-                    desde: "19:00",
-                    hasta: "01:00",
+                    inicio_atencion: "19:00",
+                    fin_atencion: "01:00",
                 },
             },
         ];
@@ -125,7 +126,7 @@ const MyPlace = () => {
             "Etiqueta 3",
             "Etiqueta 4",
         ];
-        const valoracion = 9.2;
+        const puntuacion = 9.2;
 
         const isOpenToday = () => {
             const today = getDay(new Date());
@@ -136,20 +137,26 @@ const MyPlace = () => {
 
             if (!horarioToday) return false;
 
-            const desde = moment(horarioToday.desde, "HH:mm");
-            const hasta = moment(horarioToday.hasta, "HH:mm");
+            const inicio_atencion = moment(
+                horarioToday.inicio_atencion,
+                "HH:mm"
+            );
+            const fin_atencion = moment(horarioToday.fin_atencion, "HH:mm");
             const current = moment();
 
-            if (hasta.isBefore(desde)) {
-                // Verificar si está entre 'desde' y medianoche o entre medianoche y 'hasta'
+            if (fin_atencion.isBefore(inicio_atencion)) {
+                // Verificar si está entre 'inicio_atencion' y medianoche o entre medianoche y 'fin_atencion'
                 return (
-                    current.isBetween(desde, moment("23:59:59", "HH:mm")) ||
-                    current.isBetween(moment("00:00", "HH:mm"), hasta)
+                    current.isBetween(
+                        inicio_atencion,
+                        moment("23:59:59", "HH:mm")
+                    ) ||
+                    current.isBetween(moment("00:00", "HH:mm"), fin_atencion)
                 );
             }
 
             // Si no cruza medianoche, comprobar de forma estándar
-            return current.isBetween(desde, hasta);
+            return current.isBetween(inicio_atencion, fin_atencion);
         };
         setEstablecimientoAbierto(isOpenToday());
         setEventos(eventos);
@@ -158,55 +165,49 @@ const MyPlace = () => {
         setNombre("Alice Park");
         setTipo("Tipo de local");
         setDireccion("Av Melchor Urquidi S/N, Cochabamba");
-        setValoracion(valoracion);
+        setValoracion(puntuacion);
         setEtiquetas(etiquetas);
         setHorarioAtencion(horarioAtencion);
         setFotos(fotos);
     }, []);
 
-    const guardarImagen = (imagen:ImagePicker.ImagePickerAsset)=>{
+    const guardarImagen = async (imagen: ImagePickerAsset) => {
         //guardar en el servidor
         const formData = new FormData();
-        formData.append("image", {
-            uri: imagen.uri,
-            type: imagen.type,
-            name: "image.jpg",
-        }as any);
+
+        if (imagen.uri) {
+            const imagenBlob = await fetch(imagen.uri).then((res) =>
+                res.blob()
+            );
+            formData.append("imagen", imagenBlob, "imagen.jpg");
+        }
+
         //llamar al api para guardar la imagen
 
-        console.log('guardando imagen en el servidor')
-    }
+        console.log("guardando imagen en el servidor");
+    };
 
     const getDay = (date: Date) => {
         const day = date.getDay();
         return day === 0 ? 6 : day - 1;
     };
 
-    const pickImage = async (setImage: any, aspect: [number, number]) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: aspect,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            guardarImagen(result.assets[0]);
-            setImage(result.assets[0]);
-        }
+    const handleFoto = () => {
+        pickImage(
+            (foto: ImagePickerAsset) => {
+                guardarImagen(foto);
+                setFotos([foto, ...fotos]);
+            },
+            [16, 9]
+        );
     };
-    const handleFoto = ()=> {
-        pickImage((foto:ImagePicker.ImagePickerAsset)=>{
-            setFotos([foto,...fotos])
-        }, [16, 9]);
-    }
 
     return (
         <View>
             <Notch />
             <ScrollView>
                 <ImageBackground
-                    source={portada}
+                    source={portada ? portada : image_default}
                     style={[Styles.imageBanner, { position: "relative" }]}
                 >
                     <Pressable onPress={router.back}>
@@ -237,7 +238,7 @@ const MyPlace = () => {
                     </Pressable>
                 </ImageBackground>
                 <Image
-                    source={imagenLocal}
+                    source={imagenLocal ? imagenLocal : image_default}
                     style={[
                         styles.redondoImg,
                         styles.contenedorIMG,
@@ -337,9 +338,11 @@ const MyPlace = () => {
                                         <Text>{days[horarioDia.dia]}</Text>
                                         <Text>
                                             {horarioDia.horario
-                                                ? horarioDia.horario.desde +
+                                                ? horarioDia.horario
+                                                      .inicio_atencion +
                                                   " / " +
-                                                  horarioDia.horario.hasta
+                                                  horarioDia.horario
+                                                      .fin_atencion
                                                 : "Cerrado"}
                                         </Text>
                                     </View>
@@ -424,7 +427,7 @@ const MyPlace = () => {
                                         name="star"
                                         color={"orange"}
                                     />{" "}
-                                    {valoracion} / 10
+                                    {puntuacion} / 10
                                 </Text>
                             </View>
 
@@ -437,10 +440,7 @@ const MyPlace = () => {
 
                     <FlatList
                         style={{ marginLeft: "3%" }}
-                        data={[
-                            null,
-                            ...eventos,
-                        ]}
+                        data={[null, ...eventos]}
                         renderItem={({ item }) => {
                             if (item === null) {
                                 return (
@@ -471,7 +471,8 @@ const MyPlace = () => {
                                     <Pressable
                                         onPress={() => {
                                             router.navigate(
-                                                ("/eventos/" + item.id) as Href
+                                                ("/eventos/" +
+                                                    item.id_evento) as Href
                                             );
                                         }}
                                         style={{
@@ -480,10 +481,14 @@ const MyPlace = () => {
                                             borderRadius: 150,
                                             marginTop: "2%",
                                         }}
-                                        key={item.id}
+                                        key={item.id_evento}
                                     >
                                         <ImageBackground
-                                            source={item.image}
+                                            source={
+                                                item.logo
+                                                    ? item.logo
+                                                    : image_default
+                                            }
                                             style={{
                                                 height: 200,
                                                 width: 150,
@@ -508,10 +513,10 @@ const MyPlace = () => {
                                                         fontWeight: "bold",
                                                     }}
                                                 >
-                                                    {item.fecha.getDate()}
+                                                    {item.fecha_inicio.getDate()}
                                                 </Text>
                                                 <Text style={{ fontSize: 12 }}>
-                                                    {item.fecha.toLocaleString(
+                                                    {item.fecha_inicio.toLocaleString(
                                                         "es-ES",
                                                         { month: "short" }
                                                     )}
@@ -542,8 +547,6 @@ const MyPlace = () => {
                                     <Pressable
                                         onPress={handleFoto}
                                         style={{
-                                            flexDirection: "column",
-                                            flex: 1,
                                             borderRadius: 10,
                                             marginTop: "2%",
                                             height: 150,
@@ -559,7 +562,7 @@ const MyPlace = () => {
                             } else {
                                 return (
                                     <Image
-                                        source={item}
+                                        source={item ? item : image_default}
                                         style={{
                                             width: "auto",
                                             height: 150,

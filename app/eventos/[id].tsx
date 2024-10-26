@@ -6,22 +6,22 @@ import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 interface Evento {
-    id: number;
+    id_evento: number;
     nombre: string;
     descripcion: string;
-    fecha: Date;
-    lugar: string;
-    horaInicio: Date;
-    horaFin: Date;
+    fecha_inicio: Date;
+    direccion: string;
+    horario_inicio: Date;
+    horario_fin: Date;
     precioInicial: number;
     precioFinal: number;
-    imagen: any;
-    calificacion: number;
-    calificaciones: number;
+    logo: any;
+    puntuacion: number;
+    puntuaciones: number;
     interesados: number;
 }
 interface Local {
-    id: number;
+    id_evento: number;
     nombre: string;
     telefono: string;
 }
@@ -30,31 +30,31 @@ const Evento = () => {
     const params = useLocalSearchParams();
     const [evento, setEvento] = useState<Evento>();
     const [interesado, setInteresado] = useState(false);
-    const [calificacion, setCalificacion] = useState(0);
+    const [puntuacion, setCalificacion] = useState(0);
     const [local, setLocal] = useState<Local>();
     console.log(params);
 
     useEffect(() => {
-        const { id } = params;
-        //hacer la peticion en base al id del evento
+        const { id_evento } = params;
+        //hacer la peticion en base al id_evento del evento
         const evento = {
-            id: 1,
+            id_evento: 1,
             nombre: "Noche de colores",
             descripcion:
                 "¡Prepárate para una noche llena de brillo y energía! Únete a nuestra Fiesta Neon, donde los colores vibran, la música no para y tú eres el protagonista. ¡No te pierdas la experiencia más electrizante del año!",
-            fecha: new Date("2024-11-19"),
-            lugar: "Av Melchor Urquidi S/N, Cochabamba",
-            horaInicio: new Date("24-11-19 18:00"),
-            horaFin: new Date("24-11-20 04:00"),
+            fecha_inicio: new Date("2024-11-19"),
+            direccion: "Av Melchor Urquidi S/N, Cochabamba",
+            horario_inicio: new Date("24-11-19 18:00"),
+            horario_fin: new Date("24-11-20 04:00"),
             precioInicial: 50,
             precioFinal: 100,
-            imagen: require("../../assets/images/alice-park-event-1.png"),
-            calificacion: 4,
-            calificaciones: 150,
+            logo: require("../../assets/images/alice-park-event-1.png"),
+            puntuacion: 4,
+            puntuaciones: 150,
             interesados: 200,
         };
         const local = {
-            id: 1,
+            id_evento: 1,
             nombre: "Alice Park",
             telefono: "70711360",
         };
@@ -68,7 +68,7 @@ const Evento = () => {
         return estrellas.map((item, index) => (
             <FontAwesome
                 name="star"
-                color={index < (evento?.calificacion || 0) ? "orange" : "gray"}
+                color={index < (evento?.puntuacion || 0) ? "orange" : "gray"}
             />
         ));
     };
@@ -81,7 +81,7 @@ const Evento = () => {
             <Header title={evento.nombre} />
             <ScrollView>
                 <Image
-                    source={evento.imagen}
+                    source={evento.logo}
                     style={{ height: 250, aspectRatio: "3/4" }}
                 />
                 <View
@@ -94,18 +94,18 @@ const Evento = () => {
                         {obtenerEstrellas()}
                     </View>
                     <View>
-                        <Text>({evento.calificaciones} calificaciones)</Text>
+                        <Text>({evento.puntuaciones} puntuaciones)</Text>
                     </View>
                     <Text>{evento.interesados} interesados</Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                     <FontAwesome name="circle" />
-                    <Text>{evento.lugar}</Text>
+                    <Text>{evento.direccion}</Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                     <Text>Fecha:</Text>
                     <Text>
-                        {evento.fecha.toLocaleString("es-ES", {
+                        {evento.fecha_inicio.toLocaleString("es-ES", {
                             month: "short",
                             year: "2-digit",
                             day: "numeric",
@@ -115,13 +115,13 @@ const Evento = () => {
                 <View style={{ flexDirection: "row" }}>
                     <Text>Hora:</Text>
                     <Text>
-                        {evento.horaInicio.toLocaleTimeString("es-ES", {
+                        {evento.horario_inicio.toLocaleTimeString("es-ES", {
                             hour: "2-digit",
                             minute: "2-digit",
                             hourCycle: "h12",
                         })}{" "}
                         -{" "}
-                        {evento.horaFin.toLocaleTimeString("es-ES", {
+                        {evento.horario_fin.toLocaleTimeString("es-ES", {
                             hour: "2-digit",
                             minute: "2-digit",
                             hourCycle: "h12",
@@ -169,7 +169,7 @@ const Evento = () => {
                                 <FontAwesome
                                     name="star"
                                     color={
-                                        index < calificacion ? "orange" : "gray"
+                                        index < puntuacion ? "orange" : "gray"
                                     }
                                 />
                             </Pressable>
@@ -180,7 +180,7 @@ const Evento = () => {
                 </Link>
                 <View>
                     <Text>¿Quieres saber mas de {local?.nombre}?</Text>
-                    <Link href={("/places/" + local?.id) as Href}>
+                    <Link href={("/places/" + local?.id_evento) as Href}>
                         Visita el perfil de {local?.nombre}
                     </Link>
                 </View>

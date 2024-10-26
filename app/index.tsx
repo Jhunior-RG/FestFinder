@@ -4,6 +4,7 @@ import { useSession } from "@/hooks/ctx";
 import { router } from "expo-router";
 import { StyleSheet } from "react-native";
 import { useEffect } from "react";
+import React from "react";
 
 const Index = () => {
     const { session, signOut } = useSession();
