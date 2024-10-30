@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import React from "react";
 
 const Index = () => {
-    const { session, signOut } = useSession();
+    const { session } = useSession();
 
     useEffect(() => {
         if (session) {
@@ -23,36 +23,18 @@ const Index = () => {
             />
             <Text style={Styles.title}>Bienvenido a Fest Finder</Text>
 
-            {session?.data ? (
-                <>
-                    <Text>{JSON.stringify(session.data.user)}</Text>
-
-                    <Pressable style={Styles.button} onPress={() => signOut()}>
-                        <Text style={Styles.buttonText}>Cerrar Session</Text>
-                    </Pressable>
-                </>
-            ) : (
-                <>
-                    <Pressable
-                        style={Styles.button}
-                        onPress={() => router.navigate("/login")}
-                    >
-                        <Text style={Styles.buttonText}>Iniciar sesion</Text>
-                    </Pressable>
-                    <Pressable
-                        style={Styles.button}
-                        onPress={() => router.navigate("/register")}
-                    >
-                        <Text style={Styles.buttonText}>Registrarse</Text>
-                    </Pressable>
-                    <Pressable
-                        style={Styles.button}
-                        onPress={() => router.navigate("/inicio")}
-                    >
-                        <Text style={Styles.buttonText}>Ir a la pagina principal</Text>
-                    </Pressable>
-                </>
-            )}
+            <Pressable
+                style={Styles.button}
+                onPress={() => router.navigate("/login")}
+            >
+                <Text style={Styles.buttonText}>Iniciar sesion</Text>
+            </Pressable>
+            <Pressable
+                style={Styles.button}
+                onPress={() => router.navigate("/register")}
+            >
+                <Text style={Styles.buttonText}>Registrarse</Text>
+            </Pressable>
         </View>
     );
 };

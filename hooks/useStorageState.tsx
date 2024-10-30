@@ -35,10 +35,17 @@ export async function setStorageItemAsync(key: string, value: string | null) {
         }
     }
 }
+export interface SessionData {
+    id_usuario: string|null;
+    imagen_url: string|null;
+    nombre: string|null;
+    email: string|null;
+    telefono: string|null;
+}
 
-export function useStorageState(key: string): UseStateHook<JSON> {
+export function useStorageState(key: string): UseStateHook<SessionData> {
     // Public
-    const [state, setState] = useAsyncState<JSON>();
+    const [state, setState] = useAsyncState<SessionData>();
 
     // Get
     useEffect(() => {
@@ -63,7 +70,7 @@ export function useStorageState(key: string): UseStateHook<JSON> {
 
     // Set
     const setValue = useCallback(
-        (value: any | null) => {
+        (value: SessionData | null) => {
             setState(value);
             setStorageItemAsync(key, JSON.stringify(value));
         },

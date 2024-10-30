@@ -8,48 +8,59 @@ import { router } from "expo-router";
 
 const profile = () => {
     const { session, signOut } = useSession();
-    const { name, photo, email } = session;
+
+    if (!session) {
+        router.push("/");
+        return;
+    }
+
+    const { nombre, imagen_url, email } = session;
 
     return (
         <View>
             <Header title="Mi perfil" />
             <View style={Styles.containerProfile}>
-                <Image source={{ uri: photo }} style={Styles.imageProfile} />
+                <Image
+                    source={{ uri: imagen_url }}
+                    style={Styles.imageProfile}
+                />
                 <View
                     style={{
                         alignContent: "center",
                         justifyContent: "center",
                     }}
                 >
-                    <Text style={styles.textoTitulo}>{name}</Text>
-                    <Text style={styles.textoMail} >{email}</Text>
+                    <Text style={styles.textoTitulo}>{nombre}</Text>
+                    <Text style={styles.textoMail}>{email}</Text>
                 </View>
             </View>
             <Text style={styles.textoSubtitulo}>Perfil</Text>
             <View style={styles.parametros}>
                 <ItemProfile
-                    onPress={() => { }}
+                    onPress={() => {}}
                     color="#7D5683"
                     text="Informacion personal"
                     icon="user-o"
                     textColor="#787878"
                 />
                 <ItemProfile
-                    onPress={() => { }}
+                    onPress={() => {}}
                     color="#7D5683"
                     text="Lugares favoritos"
                     icon="heart-o"
                     textColor="#787878"
                 />
                 <ItemProfile
-                    onPress={() => { }}
+                    onPress={() => {}}
                     color="#7D5683"
                     text="Historial"
                     icon="clock-o"
                     textColor="#787878"
                 />
                 <ItemProfile
-                    onPress={() => {router.push('/places/myplace') }}
+                    onPress={() => {
+                        router.push("/places/myplace");
+                    }}
                     color="#7D5683"
                     text="Administrar mi local"
                     icon="gear"
@@ -60,7 +71,7 @@ const profile = () => {
             <Text style={styles.textoSubtitulo}>Configuracion</Text>
             <View style={styles.parametros}>
                 <ItemProfile
-                    onPress={() => { }}
+                    onPress={() => {}}
                     color="#7D5683"
                     text="Notificaiones"
                     icon="bell-o"

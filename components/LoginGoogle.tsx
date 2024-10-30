@@ -18,7 +18,6 @@ const LoginGoogle = () => {
         try {
             await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
-            
 
             // Loguearse con los datos de google para obtener los datos del backend
             // y si no se puede registrar esos datos
@@ -47,7 +46,14 @@ const LoginGoogle = () => {
             */
 
             if (user.data) {
-                signIn(user.data.user);
+                const { email, name, id, photo } = user.data.user;
+                signIn({
+                    email,
+                    imagen_url: photo,
+                    telefono: "",
+                    id_usuario: id,
+                    nombre: name,
+                });
                 router.replace("/");
             }
         } catch (e) {

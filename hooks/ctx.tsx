@@ -4,14 +4,14 @@ import {
     useEffect,
     type PropsWithChildren,
 } from "react";
-import { useStorageState } from "./useStorageState";
+import { useStorageState, type SessionData } from "./useStorageState";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 
 const AuthContext = createContext<{
-    signIn: (arg1: any) => void;
+    signIn: (arg1: SessionData) => void;
     signOut: () => void;
-    session?: any | null;
+    session: SessionData| null;
     isLoading: boolean;
 }>({
     signIn: () => null,
@@ -44,19 +44,21 @@ export function SessionProvider({ children }: PropsWithChildren) {
     return (
         <AuthContext.Provider
             value={{
-                signIn: (sessionData: JSON) => {
+                signIn: (sessionData) => {
                     // Perform sign-in logic here
-                    router.replace("/inicio");
                     setSession(sessionData);
+                    router.replace("/inicio");
                 },
                 signOut: async () => {
                     router.replace("/");
                     setSession(null);
-                    try {
-                        await GoogleSignin.revokeAccess();
-                        await GoogleSignin.signOut();
-                    } catch (err) {
-                        console.error(err);
+                    if(GoogleSignin.getCurrentUser()){
+                        try {
+                            await GoogleSignin.revokeAccess();
+                            await GoogleSignin.signOut();
+                        } catch (err) {
+                            console.error("Error al Cerrar Session con google",err);
+                        }
                     }
                 },
                 session,
